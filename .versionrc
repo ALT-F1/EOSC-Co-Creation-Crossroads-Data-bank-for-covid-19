@@ -1,0 +1,15 @@
+{
+    "types": [
+        {"type": "build", "section": "Builds"},
+        {"type": "chore", "section": "Chores"},
+        {"type": "ci", "section": "Continous improvements (CI)"},
+        {"type": "docs", "section": "Documentations"},
+        {"type": "feat", "section": "Features"},
+        {"type": "fix", "section": "Bug Fixes"},
+        {"type": "perf", "section": "Performances"},
+        {"type": "refactor", "section": "Refactorings"},
+        {"type": "revert", "section": "Reverts"},
+        {"type": "style", "section": "Styles"},
+        {"type": "test", "section": "Tests"}
+    ]
+}
