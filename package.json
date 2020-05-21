@@ -1,0 +1,29 @@
+{
+    "name": "openweathermap",
+    "description": "ALT-F1 SPRL: helpers, code and tools to collect data from OpenWeatherMap.org",
+    "authors": "ALT-F1 SPRL",
+    "keywords": [
+        "etl",
+        "extract-transform-load",
+        "openweathermap.org",
+        "bpost.be",
+        "covid-19"
+    ],
+    "version": "0.0.0",
+    "main": "build/html/index.html",
+    "scripts": {
+        "release": "standard-version",
+        "patch": "npm run release -- --release-as patch",
+        "minor": "npm run release -- --release-as minor",
+        "major": "npm run release -- --release-as major",
+        "push": "git push --follow-tags origin master"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:ALT-F1/OpenWeatherMap.git"
+    },
+    "license": "SEE LICENSE IN LICENSE",
+    "devDependencies": {
+        "standard-version": "^7.0.1"
+    }
+}
