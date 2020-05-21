@@ -1,6 +1,10 @@
 # Created by Abdelkrim 
-build
-_build
+
+# avoid to upload the directory with each json files describing the weather
+
+src/data/export_from_openweathermap/historical/2020-03_March
+src/data/export_from_openweathermap/historical/2020-04_April
+src/data/export_from_openweathermap/historical/2020-05_May
 
 ## Add here the content of http://gitignore.io/api/node,python,jupyternotebooks,visualstudiocode
 
