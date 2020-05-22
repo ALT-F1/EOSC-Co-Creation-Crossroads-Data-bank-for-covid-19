@@ -3,6 +3,8 @@ import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import os
 import calendar
 import datetime
+from openweathermap_json_to_csv import json_str_to_flat_pd
+
 secret_api_key = os.environ['OPENWEATHERMAP_API_KEY']
 
 # %% [markdown]
@@ -155,6 +157,7 @@ df_postal_codes_in_be['Commune principale'] = df_postal_codes_in_be['Commune pri
 
 # %% [code]
 import unidecode
+from pandas.io.json import json_normalize
 def remove_accents_apostrophe(a):
     a= unidecode.unidecode(a) #remove accent
     a= a.replace("'", '')  #remove apostrophe
@@ -324,13 +327,26 @@ def get_range_in_a_month(year, month, current_week, days_in_a_week, days_in_curr
 
     return start_datetime, end_datetime
 
+
+def get_first_and_last_day_of_the_month(year, month):
+   
+    first_day_datetime = datetime.datetime(year=year, month=month, day=1, hour=0, minute=0)
+    printable_start_datetime = first_day_datetime.strftime("%Y-%m-%d_%Hh%M")
+      
+    last_day_datetime = datetime.datetime(year=year, month=month, day=calendar.monthrange(year,month)[1], hour=23, minute=0)
+    printable_last_datetime = last_day_datetime.strftime("%Y-%m-%d_%Hh%M")
+    
+    print(f"{printable_start_datetime}, {printable_last_datetime}")
+
+    return first_day_datetime, last_day_datetime
+
 # %% [markdown]
 # # Store : save one file per week per postal code
 # 0612_saint-nicolas_from_2020-05-29_00h00_to_2020-05-31_23h00
-
+    
 # %% [code]
 
-def save_json(current_row, year=2020, months=[3,4,5]):
+def save_to_file(current_row, year=2020, months=[3,4,5], format='csv'):
     
     city_name = current_row['city.findname']
 
@@ -338,21 +354,30 @@ def save_json(current_row, year=2020, months=[3,4,5]):
     city_id = current_row['id']
     city_postal_code = str(current_row['Code postal'])
     
-    start_date_year =  year
-    start_date_months = months
     days_in_a_week= 7
-    print(f"save : {city_postal_code}-{city_name}")
-    for month in start_date_months:
-        days_in_current_month = calendar.monthrange(start_date_year,month)[1]
+    df_csv = pd.DataFrame()
+    print(f"save : {city_postal_code.zfill(4)}-{city_name}")
+    first_day_of_the_month, last_day_of_the_month = get_first_and_last_day_of_the_month(year=year, month=months[len(months)-1])
+    for month in months:
+        days_in_current_month = calendar.monthrange(year,month)[1]
         for current_week in range(0,((days_in_current_month)//7)+1):
-            start_datetime, end_datetime = get_range_in_a_month(start_date_year, month, current_week, days_in_a_week, days_in_current_month)
+            start_datetime, end_datetime = get_range_in_a_month(year, month, current_week, days_in_a_week, days_in_current_month)
 
             #save_weather
             weather_json = openweatermap_get_history(city_id, start_datetime.strftime('%s'), end_datetime.strftime('%s'))
 
-            filename = os.path.join(output_directory, f'{city_postal_code.zfill(4)}_{city_name}_from_{start_datetime.strftime("%Y-%m-%d_%Hh%M")}_to_{end_datetime.strftime("%Y-%m-%d_%Hh%M")}-{start_datetime.strftime("%s")}_to_{end_datetime.strftime("%s")}.json')
+            filename = os.path.join(output_directory, f'{city_postal_code.zfill(4)}_{city_name}_from_{start_datetime.strftime("%Y-%m-%d_%Hh%M")}_to_{end_datetime.strftime("%Y-%m-%d_%Hh%M")}-{start_datetime.strftime("%s")}_to_{end_datetime.strftime("%s")}')
             
-            with open(filename, 'w') as outfile:
-                json.dump(weather_json, outfile, indent=2)
+            if format=='csv':
+                df_csv = pd.concat([df_csv, json_str_to_flat_pd(weather_json)])
 
-df_final_drop_duplicates.apply(save_json, axis=1, args=[2020, [3]])
+            elif format=='json':
+                with open(f"{filename}.json", 'w') as outfile:
+                    json.dump(weather_json, outfile, indent=2)
+
+    if format=='csv':
+        filename = os.path.join(output_directory, f'{city_postal_code.zfill(4)}_{city_name}_from_{first_day_of_the_month.strftime("%Y-%m-%d_%Hh%M")}_to_{last_day_of_the_month.strftime("%Y-%m-%d_%Hh%M")}-{first_day_of_the_month.strftime("%s")}_to_{last_day_of_the_month.strftime("%s")}')
+        df_csv.to_csv(f"{filename}.csv", index=False)
+
+if __name__ == "__main__":
+    df_final_drop_duplicates.apply(save_to_file, axis=1, args=[2020, [3,4,5], 'csv'])
