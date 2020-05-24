@@ -183,16 +183,16 @@ df_postal_codes_in_be=df_postal_codes_in_be.drop_duplicates(keep='first')
 # # Helper: store dataframes in XLS files
 
 # %% [code]
-df_postal_codes_in_be['Commune principale'].to_excel(os.path.join(output_directory, "tmp_comm_princ.xlsx"))
+df_postal_codes_in_be['Commune principale'].to_excel(os.path.join(output_directory, "tmp", "tmp_comm_princ.xlsx"))
 
 # %% [code]
-df_postal_codes_in_be['Commune principale normalized'].to_excel(os.path.join(output_directory, "tmp_com_princ_norm.xlsx"))
+df_postal_codes_in_be['Commune principale normalized'].to_excel(os.path.join(output_directory, "tmp", "tmp_com_princ_norm.xlsx"))
 
 # %% [code]
-df_postal_codes_in_be.to_excel(os.path.join(output_directory, "df_postal_codes_in_be.xlsx"))
+df_postal_codes_in_be.to_excel(os.path.join(output_directory, "tmp", "df_postal_codes_in_be.xlsx"))
 
 # %% [code]
-df_cities_weather_in_be.to_excel(os.path.join(output_directory, "df_cities_weather_in_be.xlsx"))
+df_cities_weather_in_be.to_excel(os.path.join(output_directory, "tmp", "df_cities_weather_in_be.xlsx"))
 
 # %% [markdown]
 # # Transform: Merge OpenWeatherMap and BPOST.BE datasets
@@ -376,7 +376,7 @@ def save_to_file(current_row, year=2020, months=[3,4,5], format='csv'):
                     json.dump(weather_json, outfile, indent=2)
 
     if format=='csv':
-        filename = os.path.join(output_directory, f'{city_postal_code.zfill(4)}_{city_name}_from_{first_day_of_the_month.strftime("%Y-%m-%d_%Hh%M")}_to_{last_day_of_the_month.strftime("%Y-%m-%d_%Hh%M")}-{first_day_of_the_month.strftime("%s")}_to_{last_day_of_the_month.strftime("%s")}')
+        filename = os.path.join(output_directory, "csv", f'{city_postal_code.zfill(4)}_{city_name}_from_{first_day_of_the_month.strftime("%Y-%m-%d_%Hh%M")}_to_{last_day_of_the_month.strftime("%Y-%m-%d_%Hh%M")}-{first_day_of_the_month.strftime("%s")}_to_{last_day_of_the_month.strftime("%s")}')
         df_csv.to_csv(f"{filename}.csv", index=False)
 
 if __name__ == "__main__":
