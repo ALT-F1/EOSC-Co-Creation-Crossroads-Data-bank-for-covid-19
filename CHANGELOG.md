@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.2.0...v1.2.1) (2020-05-24)
+
+
+### Features
+
+* store temporary files (dataframes) under a 'tmp' directory ([7504cf9](https://github.com/ALT-F1/OpenWeatherMap/commit/7504cf9edcc18dd1ba08964d5486dc4ef4338075))
+
 ## [1.2.0](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.1.0...v1.2.0) (2020-05-24)
 
 
