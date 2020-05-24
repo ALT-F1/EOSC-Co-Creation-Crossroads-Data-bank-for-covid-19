@@ -5,6 +5,7 @@
 src/data/export_from_openweathermap/historical/2020-03_March
 src/data/export_from_openweathermap/historical/2020-04_April
 src/data/export_from_openweathermap/historical/2020-05_May
+src/data/export_from_openweathermap/historical/csv-March_2020-to-May_22_2020
 
 ## Add here the content of http://gitignore.io/api/node,python,jupyternotebooks,visualstudiocode
 
