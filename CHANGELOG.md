@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.1.0...v1.2.0) (2020-05-24)
+
+
+### Features
+
+* generate the weather data in Belgium from March 01, 2020 to May 22, 2020 in csv format ([218133f](https://github.com/ALT-F1/OpenWeatherMap/commit/218133f7d42aee42973f452056556ca5e37ac59f))
+
+
+### Chores
+
+* add src/data/export_from_openweathermap/historical/csv-March_2020-to-May_22_2020 to gitignore ([85737be](https://github.com/ALT-F1/OpenWeatherMap/commit/85737be6b0b13d3ba75ec5b12dd7540ac6dc0da9))
+
 ## [1.1.0](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.0.0...v1.1.0) (2020-05-22)
 
 
