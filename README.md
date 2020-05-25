@@ -40,13 +40,13 @@ This project joins both databases to enable a link between diverse types of data
 
 # The sponsors of the project
 
-**EOSC Secretariat**, the secretariat supports the governance of the **E**uropean **O**pen **S**cience **C**loud (EOSC). See [https://www.eoscsecretariat.eu/](https://www.eoscsecretariat.eu)
+The **EOSC Secretariat** supports the governance of the **E**uropean **O**pen **S**cience **C**loud (EOSC). See [https://www.eoscsecretariat.eu/](https://www.eoscsecretariat.eu)
 
-The EOSC supports projects aiming to make data **F**indable, **A**ccessible, **I**nteroperable, and **R**epoducible (FAIR) for scientists; these combinations would lead to (unforeseen) reuse and faster development of science. 
+The EOSC supports projects aiming to make data **F**indable, **A**ccessible, **I**nteroperable, and **R**eproducible (FAIR) for scientists; these combinations would lead to (unforeseen) reuse and faster development of science. 
 
-EOSC Secretariat granted funds to [http://www.alt-f1.be](http://www.alt-f1.be) to create a "Crossroads Data Bank for COVID-19"
+EOSC Secretariat granted funds to [http://www.alt-f1.be](http://www.alt-f1.be) to create a "Crossroads Data Bank for COVID-19".
 
-Latest news from the European Commission : [https://ec.europa.eu/research/openscience/index.cfm?pg=open-science-cloud](https://ec.europa.eu/research/openscience/index.cfm?pg=open-science-cloud) 
+Latest news from the European Commission: [https://ec.europa.eu/research/openscience/index.cfm?pg=open-science-cloud](https://ec.europa.eu/research/openscience/index.cfm?pg=open-science-cloud) 
 
 **OpenWeatherMap** provides, free-of-charge, access to weather data to its historical weather data [https://openweathermap.org/api](https://openweathermap.org/api)
 
