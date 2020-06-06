@@ -4,6 +4,13 @@ The software collects the Weather of the Belgian communes from the OpenWeatherMa
 
 The weather data will be linked to other data to answer one question: "Does the usage of the Weather data influence (or not) the model forecasting the spread of the COVID-19?"
 
+# How to merge OpenWeatherMap.org and BPost.be databases?
+
+1. Set the api_key from [https://home.openweathermap.org/api_keys](https://home.openweathermap.org/api_keys)
+2. Install python requirements by running `pip install -r requirements.txt`
+3. Run `python src/eosc-gees-weather_in_belgian_provinces_per_day.py`
+4. Look in the `output_directory/data/` directory to manipulate .csv and .json files
+
 # The context
 
 Given the consequences of the COVID-19 pandemic for public health, many stakeholders in public and private sectors engage in global efforts to treat and understand those exposed to the virus and to contain the outbreak.
@@ -32,11 +39,11 @@ This project joins both databases to enable a link between diverse types of data
 
 # The tools used to build the software
 
-* Pandas https://pandas.pydata.org
-* Python https://www.python.org 
-* Numpy https://numpy.org
+* Pandas [https://pandas.pydata.org](https://pandas.pydata.org)
+* Python [https://www.python.org](https://www.python.org)
+* Numpy [https://numpy.org](https://numpy.org)
 * Kaggle [https://www.kaggle.com](https://www.kaggle.com)
-* Visual Studio Code https://code.visualstudio.com
+* Visual Studio Code [https://code.visualstudio.com](https://code.visualstudio.com)
 
 # The sponsors of the project
 
@@ -155,6 +162,12 @@ The documentation of the **response from the history** of OpenWeatherMap is here
     * `npm run push`
 
 
+# kaggle implementations
+
+Kaggle has been used to build the ETL. Here are the utility scripts and notebooks that are available if you want to use get the weather data in Belgium
+
+* bpost_be_postal_code
+* altf1be_helpers
 
 
 # Acronyms
