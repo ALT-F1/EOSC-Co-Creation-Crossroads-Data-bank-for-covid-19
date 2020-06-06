@@ -6,7 +6,7 @@ import openweathermap_error_codes as error_codes
 json_file_path = "/home/abdelkrim/dev/github/OpenWeatherMap/src/data/export_from_openweathermap/historical/2020-03_March/1000_brussels_from_2020-03-01_00h00_to_2020-03-07_23h00-1583017200_to_1583618400.json"
 
 
-def create_pd(json_data):
+def csv_to_df(json_data):
     # {'code': 400000, 'message': 'data from future is...available'}
     df_csv = pd.DataFrame(columns=['message',
                                    'cod',
@@ -87,14 +87,14 @@ def json_file_to_flat_pd():
         # print(data)
         j = json.loads(data)
         # print(j)
-        df_csv = create_pd(j)
+        df_csv = csv_to_df(j)
 
     return df_csv
 
 
 def json_str_to_flat_pd(data):
     j = json.loads(data)
-    df_csv = create_pd(j)
+    df_csv = csv_to_df(j)
     return df_csv
 
 
