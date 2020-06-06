@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.2.1...v1.3.0) (2020-06-06)
+
+
+### Features
+
+* altf1be_helpers.py checks if you use an interactive app such as kaggle, convert unicode to ascii, set the output directory and set a date range ([966bfdc](https://github.com/ALT-F1/OpenWeatherMap/commit/966bfdcac11109de89dc50d0e5136bcb816bcd1c))
+* BPost_postal_codes extract-transform-load postal codes metadata from bpost.be to manipulate them ([899af49](https://github.com/ALT-F1/OpenWeatherMap/commit/899af49903b8c4996d02b5cad28a62b185c2f644))
+* merge OpenWeatherMap.org and BPost.be cities and postal codes and store them under output_directory/data/YYY-MM-DD directories ([1237115](https://github.com/ALT-F1/OpenWeatherMap/commit/123711578b54673a6f265f28b8e9cb28c346f1b4))
+* OpenWeatherMap class extract-transform-load cities from OpenWeatherMap.org to manipulate them ([069e2ff](https://github.com/ALT-F1/OpenWeatherMap/commit/069e2ff07748f24705ce3fdf4b88583f228d60f5))
+
+
+### Bug Fixes
+
+* rename create_pd to csv_to_df to facilitate the understanding ([b3c5bea](https://github.com/ALT-F1/OpenWeatherMap/commit/b3c5bea15e918ffd87d43475409f2a12cd5763db))
+
+
+### Documentations
+
+* add 'how to run the code' section ([a11a44e](https://github.com/ALT-F1/OpenWeatherMap/commit/a11a44e51843cbe6b3b50109f213ec3d76f36adf))
+* correct misspellings ([7509ea5](https://github.com/ALT-F1/OpenWeatherMap/commit/7509ea5d3386859ce95739e60623cdf0b0a1d2f3))
+
+
+### Chores
+
+* add .json and .csv in .gitattributes ([d6db11a](https://github.com/ALT-F1/OpenWeatherMap/commit/d6db11a9f4315cd9a72f87fef2d3bc8b4c6e8a69))
+* store BPost.be postal codes ([e987090](https://github.com/ALT-F1/OpenWeatherMap/commit/e987090564011461cbfb2d4625f4ca8c732252f6))
+
+
+### Styles
+
+* add github social preview ([bbe9a1c](https://github.com/ALT-F1/OpenWeatherMap/commit/bbe9a1cd223d4e818ac5beaefc12be5476b20030))
+
 ### [1.2.1](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.2.0...v1.2.1) (2020-05-24)
 
 
