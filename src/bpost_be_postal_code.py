@@ -4,7 +4,7 @@
 
 from pathlib import PurePath
 
-from altf1be_helpers import unicode_to_ascii, is_interactive, output_directory
+from altf1be_helpers import AltF1BeHelpers
 
 import numpy as np  # linear algebra
 import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
@@ -28,13 +28,15 @@ class BPost_postal_codes():
     """
 
     def initialize_variables(self):
+        self.altF1BeHelpers = AltF1BeHelpers()
+
         # source https://www.bpost.be/site/fr/envoyer/adressage/rechercher-un-code-postal
         postal_codes_in_be_from_bpost_be_in_fr_path = "kaggle/input/bpost-postal-codes/zipcodes_alpha_fr_new.csv"
 
         # source https://www.bpost.be/site/nl/verzenden/adressering/zoek-een-postcode
         postal_codes_in_be_from_bpost_be_in_nl_path = "kaggle/input/bpost-postal-codes/zipcodes_alpha_nl_new.csv"
 
-        if (is_interactive()):
+        if (self.altF1BeHelpers.is_interactive()):
             self.postal_codes_in_be_from_bpost_be_in_fr_path = f"/{postal_codes_in_be_from_bpost_be_in_fr_path}"
             self.postal_codes_in_be_from_bpost_be_in_nl_path = f"/{postal_codes_in_be_from_bpost_be_in_nl_path}"
         else:
@@ -142,11 +144,11 @@ class BPost_postal_codes():
         Transform: remove accents and apostophes and use 'normalized' columns
         """
         df['Commune principale normalized'] = df['Commune principale'].apply(
-            unicode_to_ascii
+            self.altF1BeHelpers.unicode_to_ascii
         )
 
         df['Localité normalized'] = df['Localité'].apply(
-            unicode_to_ascii
+            self.altF1BeHelpers.unicode_to_ascii
         )
 
         return df
@@ -164,8 +166,8 @@ class BPost_postal_codes():
 
     def save(self, df):
         save_file_in = os.path.join(
-            output_directory(['BPost.be']), "df_postal_codes_in_be.xlsx")
-        
+            self.altF1BeHelpers.output_directory(['BPost.be']), "df_postal_codes_in_be.xlsx")
+
         print(f"Save DataFrame in '{save_file_in}'")
 
         df.to_excel(save_file_in)
@@ -189,6 +191,8 @@ class BPost_postal_codes():
 
 
 if __name__ == "__main__":
-    print(f"is_interactive() : {is_interactive()}")
     bpost_postal_codes = BPost_postal_codes()
+    print(
+        f"is_interactive() : {bpost_postal_codes.altF1BeHelpers.is_interactive()}")
+
     print(bpost_postal_codes.df_postal_codes_in_be)
