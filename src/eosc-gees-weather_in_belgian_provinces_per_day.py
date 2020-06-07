@@ -17,7 +17,7 @@ from datetime import datetime, timedelta, date
 import json
 #from altf1be_helpers import output_directory, daterange
 from altf1be_helpers import AltF1BeHelpers
-from bpost_be_postal_code import BPost_postal_codes
+from bpost_be_postal_code_helpers import BPost_postal_codes
 from openweathermap_helpers import OpenWeatherMap
 import mimetypes
 import numpy as np  # linear algebra
@@ -172,7 +172,7 @@ if __name__ == "__main__":
     belgianCities = BelgianCities()
     merged_df = belgianCities.merge_openweathermap_bpost()
     print(f"belgianCities.merge_openweathermap_bpost: {merged_df}")
-    
-    belgianCities.save_from_to_date() # save the weather of all Belgian cities of yesterday by default
-    #belgianCities.save_from_to_date(start_date=datetime(2020, 3, 1)) # store the weather data for a specific date
-    #belgianCities.save_from_to_date(start_date=datetime(2020, 3, 1), end_date=datetime(2020, 3, 31)) # store the weather data for and to a certain date
+
+    belgianCities.save_from_to_date() # save the weather of all Belgian cities of yesterday (default behavior)
+    # belgianCities.save_from_to_date(start_date=datetime(2020, 3, 1)) # store the weather data for a specific date
+    # belgianCities.save_from_to_date(start_date=datetime(2020, 3, 1), end_date=datetime(2020, 3, 31)) # store the weather data for and to a certain date
