@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.2](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.3.1...v1.3.2) (2020-06-07)
+
+
+### Refactorings
+
+* rename the library to bpost_be_postal_code_helpers.py ([d9d2130](https://github.com/ALT-F1/OpenWeatherMap/commit/d9d2130a2d956ecf4cf3ea8786344d61c9aadb40))
+
+
+### Styles
+
+* remove the github social preview made with Pinta ([7172453](https://github.com/ALT-F1/OpenWeatherMap/commit/7172453e42cd1e0f26234454a351ad1353546f5f))
+
 ### [1.3.1](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.3.0...v1.3.1) (2020-06-07)
 
 
