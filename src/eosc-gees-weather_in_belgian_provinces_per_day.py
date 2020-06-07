@@ -12,12 +12,13 @@
 # It is defined by the kaggle/python Docker image: https://github.com/kaggle/docker-python
 # For example, here's several helpful packages to load
 
+import threading
 from datetime import datetime, timedelta, date
 import json
-from altf1be_helpers import output_directory, daterange
+#from altf1be_helpers import output_directory, daterange
+from altf1be_helpers import AltF1BeHelpers
 from bpost_be_postal_code import BPost_postal_codes
 from openweathermap_helpers import OpenWeatherMap
-import http.client
 import mimetypes
 import numpy as np  # linear algebra
 import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
@@ -37,14 +38,16 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
 # keep: import libraries
 
 FILE_ALREADY_EXISTS = 1
-import threading
 
 
 class BelgianCities():
 
+    def __init__(self):
+        self.altF1BeHelpers = AltF1BeHelpers()
+
     def thread_save(self, single_date):
         self.df_merged.apply(
-                belgianCities.save_to_file, axis=1, args=[single_date.year, single_date.month, single_date.day, 'csv'])
+            belgianCities.save_to_file, axis=1, args=[single_date.year, single_date.month, single_date.day, 'csv'])
 
     def save_from_to_date(self, start_date=None, end_date=None):
         if start_date is None:
@@ -56,10 +59,9 @@ class BelgianCities():
             end_date = datetime.now() - timedelta(0)
 
         # see https://stackoverflow.com/questions/1060279/iterating-through-a-range-of-dates-in-python
-        for single_date in daterange(start_date, end_date):
+        for single_date in self.altF1BeHelpers.daterange(start_date, end_date):
             x = threading.Thread(target=self.thread_save, args=(single_date,))
             x.start()
-            
 
     def save_to_file(self, current_row, year=2020, month=5, day=1, format='csv'):
         """
@@ -73,9 +75,9 @@ class BelgianCities():
         start_datetime, end_datetime = self.openWeatherMap.get_range_between_days(
             year, month, day)
 
-        filename = os.path.join(output_directory([start_datetime.strftime("%Y-%m-%d")]),
+        filename = os.path.join(self.altF1BeHelpers.output_directory([start_datetime.strftime("%Y-%m-%d")]),
                                 f'{city_postal_code.zfill(4)}-{city_name}-{start_datetime.strftime("%Y-%m-%d")}')
-        
+
         if os.path.exists(f"{filename}.json"):
             print(
                 f"File already exists: We skip its retrieval from OpenWeathMap.org: {filename}.json")
@@ -86,7 +88,7 @@ class BelgianCities():
         print(f"File stored in : {os.path.dirname(filename)}")
 
         # get the weather from OpenWeatherMap.org
-        weather_json = self.openweatermap_get_history(
+        weather_json = self.openWeatherMap.get_history(
             city_id, start_datetime.strftime('%s'), end_datetime.strftime('%s'))
 
         df_csv = pd.DataFrame()
@@ -97,25 +99,11 @@ class BelgianCities():
             df_csv.to_csv(f"{filename}.csv", index=False)
             print(f"File stored in : {filename}.csv")
 
-        
         with open(f"{filename}.json", 'w') as outfile:
             json.dump(weather_json, outfile, indent=2)
             print(f"File stored in : {filename}.json")
 
         return weather_json
-
-    def openweatermap_get_history(self, city_id, start, end):
-
-        conn = http.client.HTTPSConnection("history.openweathermap.org")
-        payload = ''
-        headers = {}
-        conn.request(
-            "GET", f"/data/2.5/history/city?id={city_id}&start={start}&end={end}&appid={self.openWeatherMap.secret_api_key}", payload, headers)
-        res = conn.getresponse()
-        data = res.read()
-        result = data.decode("utf-8")
-        # print(result)
-        return result
 
     def merge_openweathermap_bpost(self):
         """
@@ -124,6 +112,7 @@ class BelgianCities():
         # %% [code]
         # keep: get Belgian cities from OpenWeatherMap
         self.openWeatherMap = OpenWeatherMap()
+        self.openWeatherMap.build_df()
         print(self.openWeatherMap.df_cities_weather_in_be)
 
         # %% [code]
@@ -175,6 +164,7 @@ class BelgianCities():
             subset=['Code postal'], keep='first')
 
         return self.df_merged
+
         # %% [code]
 
 
@@ -182,5 +172,7 @@ if __name__ == "__main__":
     belgianCities = BelgianCities()
     merged_df = belgianCities.merge_openweathermap_bpost()
     print(f"belgianCities.merge_openweathermap_bpost: {merged_df}")
-    belgianCities.save_from_to_date() # save the weather of all Belgian cities of yesterday by default 
-    #belgianCities.save_from_to_date(start_date=datetime(2020, 3, 1))
+    
+    belgianCities.save_from_to_date() # save the weather of all Belgian cities of yesterday by default
+    #belgianCities.save_from_to_date(start_date=datetime(2020, 3, 1)) # store the weather data for a specific date
+    #belgianCities.save_from_to_date(start_date=datetime(2020, 3, 1), end_date=datetime(2020, 3, 31)) # store the weather data for and to a certain date
