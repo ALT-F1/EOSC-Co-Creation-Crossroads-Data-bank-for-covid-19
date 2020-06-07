@@ -24,58 +24,60 @@ MISSING_LIBRARY = -1
 
 # import libraries
 
+class AltF1BeHelpers:
+    def is_interactive(self):
+        # return True if running on Kaggle
+        try:
+            return 'runtime' in get_ipython().config.IPKernelApp.connection_file
+        except NameError:
+            if (path.exists('/kaggle/working')):
+                return True
+            else:
+                return False
 
-def is_interactive():
-    # return True if running on Kaggle
-    try:
-        return 'runtime' in get_ipython().config.IPKernelApp.connection_file
-    except NameError:
-        if (path.exists('/kaggle/working')):
-            return True
+
+    def unicode_to_ascii(self, a):
+        """
+        remove accents and apostrophes
+        """
+        try:
+            import unidecode
+        except ModuleNotFoundError:
+            print(f"unidecode library is missing in you environment. Install unidecode or use conda or venv to set the right environment")
+            exit(MISSING_LIBRARY)
+        # def remove_accents_apostrophe(a):
+        a = unidecode.unidecode(a)  # remove accent
+        a = a.replace("'", '')  # remove apostrophe
+        return a
+
+
+    def output_directory(self, directories):
+        output_directory = '/kaggle/working'
+        if self.is_interactive():
+            output_directory = os.path.join(
+                output_directory, os.path.sep.join(directories))
         else:
-            return False
+            output_directory = os.path.join(os.path.abspath(
+                os.getcwd()), "output_directory", "data", os.path.sep.join(directories))
 
+        Path(output_directory).mkdir(parents=True, exist_ok=True)
+        return output_directory
 
-def unicode_to_ascii(a):
-    """
-    remove accents and apostrophes
-    """
-    try:
-        import unidecode
-    except ModuleNotFoundError:
-        print(f"unidecode library is missing in you environment. Install unidecode or use conda or venv to set the right environment")
-        exit(MISSING_LIBRARY)
-    # def remove_accents_apostrophe(a):
-    a = unidecode.unidecode(a)  # remove accent
-    a = a.replace("'", '')  # remove apostrophe
-    return a
-
-
-def output_directory(directories):
-    output_directory = '/kaggle/working'
-    if is_interactive():
-        output_directory = os.path.join(
-            output_directory, ','.join(directories))
-    else:
-        output_directory = os.path.join(os.path.abspath(
-            os.getcwd()), "output_directory", "data", ','.join(directories))
-
-    Path(output_directory).mkdir(parents=True, exist_ok=True)
-    return output_directory
-
-def daterange(start_date, end_date):
-    for n in range(int((end_date - start_date).days)):
-        yield start_date + timedelta(n)
+    def daterange(self, start_date, end_date):
+        for n in range(int((end_date - start_date).days)):
+            yield start_date + timedelta(n)
 
 
 if __name__ == "__main__":
+
+    altF1BeHelpers = AltF1BeHelpers()
     text = "éè à iïî où &é'(§è!çàaQwxs $ µ `"
     print(
-        f"unicode_to_ascii(text): '{text}' becomes '{unicode_to_ascii(text)}'")
-    print(f"is_interactive(): {is_interactive()}")
-    print(f"output_directory(): {output_directory(['new_directory'])}")
+        f"unicode_to_ascii(text): '{text}' becomes '{altF1BeHelpers.unicode_to_ascii(text)}'")
+    print(f"is_interactive(): {altF1BeHelpers.is_interactive()}")
+    print(f"output_directory(): {altF1BeHelpers.output_directory(['new_directory'])}")
 
-    for single_date in daterange(datetime.now() - timedelta(5), datetime.now() - timedelta(1)):
+    for single_date in altF1BeHelpers.daterange(datetime.now() - timedelta(5), datetime.now() - timedelta(1)):
             #print(single_date.strftime("%Y-%m-%d"))
             print(f'daterange(): {single_date.strftime("%Y-%m-%d")}')
 
