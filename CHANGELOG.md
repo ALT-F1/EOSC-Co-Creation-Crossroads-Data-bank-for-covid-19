@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.3.0...v1.3.1) (2020-06-07)
+
+
+### Chores
+
+* delete input files moved under the same directory as it was stored on Kaggle ([84962a5](https://github.com/ALT-F1/OpenWeatherMap/commit/84962a5cae39104305f1f7b2a96ec58b2abe312e))
+* delete unused files ([765cb0a](https://github.com/ALT-F1/OpenWeatherMap/commit/765cb0a30d5ca18b2adde66a04124d493e6cdfc2))
+
+
+### Refactorings
+
+* add get_history method to download the OpenWeatherMap.org, load history city list like it is stored on kaggle, add build_df method to separate the initialization of properties and build the DataFrame ([0bbdc73](https://github.com/ALT-F1/OpenWeatherMap/commit/0bbdc7321598004919efbf741d85d6ce97a9679c))
+* create a class to ease the use of the methods, output_directory use the separator / or \ depending on the operating system ([06e0d42](https://github.com/ALT-F1/OpenWeatherMap/commit/06e0d42845c9c851b7d78db1f86601885a0766c4))
+* move the file in the same directory as it was stored on Kaggle ([a8e15f5](https://github.com/ALT-F1/OpenWeatherMap/commit/a8e15f5b3a601b2c8ce30030ae83378fc98c3954))
+* use AltF1BeHelpers class instead of functions ([aa68849](https://github.com/ALT-F1/OpenWeatherMap/commit/aa688496a9a6889095760236f27f461a5daa41e2))
+* use AltF1BeHelpers class instead of functions, move openweathermap_get_history into openweathermap_helpers.py, add usage example of the class ([dd25155](https://github.com/ALT-F1/OpenWeatherMap/commit/dd25155ca118c5a58774022f57e9b5e564a199ed))
+
 ## [1.3.0](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.2.1...v1.3.0) (2020-06-06)
 
 
