@@ -3,10 +3,11 @@
 # It is defined by the kaggle/python Docker image: https://github.com/kaggle/docker-python
 # For example, here's several helpful packages to load
 
-
+# initialize libraries
+import http.client
 import datetime
 import json
-from altf1be_helpers import is_interactive, output_directory
+from altf1be_helpers import AltF1BeHelpers
 from os import path
 import numpy as np  # linear algebra
 import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
@@ -22,39 +23,95 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
 # You can write up to 5GB to the current directory (/kaggle/working/) that gets preserved as output when you create a version using "Save & Run All"
 # You can also write temporary files to /kaggle/temp/, but they won't be saved outside of the current session
 
-# initialize libraries
-
 # %% [code]
 
 # initialize constants
 DATA_FROM_FUTURE_IS_UNAVAILABLE = 400000
+
 
 class OpenWeatherMap():
     """ 
         The class provides a read-to-use OpenWeatherMap functionalities
     """
 
+    def get_history(self, city_id, start, end):
+
+        conn = http.client.HTTPSConnection("history.openweathermap.org")
+        payload = ''
+        headers = {}
+        conn.request(
+            "GET", f"/data/2.5/history/city?id={city_id}&start={start}&end={end}&appid={self.secret_api_key}", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        result = data.decode("utf-8")
+        # print(result)
+        return result
+
+    def save_to_file(self, current_row, year=2020, month=5, day=1, format='csv'):
+        """
+            get the weather for a specific day for from OpenWeatherMap.org
+        """
+
+        city_name = current_row['city.findname']
+        city_id = current_row['id']
+
+        start_datetime, end_datetime = self.get_range_between_days(
+            year, month, day)
+
+        filename = os.path.join(self.altF1BeHelpers.output_directory(['OpenWeatherMap.org', start_datetime.strftime("%Y-%m-%d")]),
+                                f'{city_name}-{start_datetime.strftime("%Y-%m-%d")}')
+
+        if os.path.exists(f"{filename}.json"):
+            print(
+                f"File already exists: We skip its retrieval from OpenWeathMap.org: {filename}.json")
+            with open(f"{filename}.json") as json_file:
+                weather_json = json.load(json_file)
+            return weather_json
+
+        print(f"File stored in : {os.path.dirname(filename)}")
+
+        # get the weather from OpenWeatherMap.org
+        weather_json = self.get_history(
+            city_id, start_datetime.strftime('%s'), end_datetime.strftime('%s'))
+
+        df_csv = pd.DataFrame()
+        if format == 'csv':
+            df_csv = pd.concat(
+                [df_csv, self.json_str_to_flat_df(weather_json)])
+
+            df_csv.to_csv(f"{filename}.csv", index=False)
+            print(f"File stored in : {filename}.csv")
+
+        with open(f"{filename}.json", 'w') as outfile:
+            json.dump(weather_json, outfile, indent=2)
+            print(f"File stored in : {filename}.json")
+
+        return weather_json
+
     def csv_to_df(self, json_data):
+        """
+            convert a CSV into a Dataframe
+        """
         # {'code': 400000, 'message': 'data from future is...available'}
         df_csv = pd.DataFrame(columns=['message',
-                                    'cod',
-                                    'city_id',
-                                    'calctime',
-                                    'cnt',
-                                    'dt',
-                                    'main.temp',
-                                    'main.feels_like',
-                                    'main.pressure',
-                                    'main.humidity',
-                                    'main.temp_min',
-                                    'main.temp_max',
-                                    'wind.speed',
-                                    'wind.deg',
-                                    'clouds.all',
-                                    'weather.id',
-                                    'weather.main',
-                                    'weather.description',
-                                    'weather.icon', ])
+                                       'cod',
+                                       'city_id',
+                                       'calctime',
+                                       'cnt',
+                                       'dt',
+                                       'main.temp',
+                                       'main.feels_like',
+                                       'main.pressure',
+                                       'main.humidity',
+                                       'main.temp_min',
+                                       'main.temp_max',
+                                       'wind.speed',
+                                       'wind.deg',
+                                       'clouds.all',
+                                       'weather.id',
+                                       'weather.main',
+                                       'weather.description',
+                                       'weather.icon', ])
 
         try:
             if json_data["code"] == DATA_FROM_FUTURE_IS_UNAVAILABLE:
@@ -107,7 +164,7 @@ class OpenWeatherMap():
             df_csv = df_csv.append(df_new_row, ignore_index=True)
 
         return df_csv
-        
+
     def json_str_to_flat_df(self, json_str):
         """
             convert a JSON string into a flat DataFrame
@@ -132,6 +189,7 @@ class OpenWeatherMap():
         print(f"{printable_start_datetime}, {printable_end_datetime}")
 
         return start_datetime, end_datetime
+
     def get_range_in_a_month(self, year, month, current_week, days_in_a_week, days_in_current_month):
         """
             get a range in a month 
@@ -154,7 +212,7 @@ class OpenWeatherMap():
     def save(self):
 
         self.df_cities_weather_in_be.to_excel(os.path.join(
-            output_directory(['OpenWeatherMap.org']), "df_cities_weather_in_be.xlsx"))
+            self.altF1BeHelpers.output_directory(['OpenWeatherMap.org']), "df_cities_weather_in_be.xlsx"))
 
     def get_openweathermap_secret_key(self):
         self.secret_api_key = None
@@ -193,31 +251,20 @@ class OpenWeatherMap():
         """
         initialize three paths history_city_list_path, postal_codes_in_be_from_geonames_org
         """
-
-        if (is_interactive()):
+        history_city_list_path = "kaggle/input/historycitylistjson/history.city.list.json"
+        if (self.altF1BeHelpers.is_interactive()):
             # source https://openweathermap.org/history
-            self.history_city_list_path = "/kaggle/input/historycitylistjson/history.city.list.json"
-            # source https://www.bpost.be/site/fr/envoyer/adressage/rechercher-un-code-postal
-            self.postal_codes_in_be_from_bpost_be_in_fr_path = "/kaggle/input/bpostbe/zipcodes_alpha_fr_new.csv"
-            # source https://www.bpost.be/site/nl/verzenden/adressering/zoek-een-postcode
-            self.postal_codes_in_be_from_bpost_be_in_nl_path = "/kaggle/input/bpostbenl/zipcodes_alpha_nl_new.csv"
+            self.history_city_list_path = f"/{history_city_list_path}"
         else:
-            self.history_city_list_path = os.path.join(os.path.abspath(os.getcwd(
-            )), "src", "data", "history.city.list.json")  # source https://openweathermap.org/history
-            # source https://www.bpost.be/site/fr/envoyer/adressage/rechercher-un-code-postal
-            self.postal_codes_in_be_from_bpost_be_in_fr_path = os.path.join(
-                os.path.abspath(os.getcwd()), "src", "data", "zipcodes_alpha_fr_new.csv")
-            # source https://www.bpost.be/site/nl/verzenden/adressering/zoek-een-postcode
-            self.postal_codes_in_be_from_bpost_be_in_nl_path = os.path.join(
-                os.path.abspath(os.getcwd()), "src", "data", "zipcodes_alpha_nl_new.csv")
+            self.history_city_list_path = os.path.join(
+                os.path.abspath(os.getcwd()),
+                "src",
+                history_city_list_path
+            )
 
         print(f"history_city_list_path: {self.history_city_list_path}")
-        print(
-            f"postal_codes_in_be_from_bpost_be_in_fr_path: {self.postal_codes_in_be_from_bpost_be_in_fr_path}")
-        print(
-            f"postal_codes_in_be_from_bpost_be_in_nl_path: {self.postal_codes_in_be_from_bpost_be_in_nl_path}")
 
-        return self.history_city_list_path, self.postal_codes_in_be_from_bpost_be_in_fr_path, self.postal_codes_in_be_from_bpost_be_in_nl_path
+        return self.history_city_list_path
 
     def clean_columns(self, df):
         """
@@ -275,9 +322,10 @@ class OpenWeatherMap():
 
         return pd.json_normalize(d)
 
-    def __init__(self):
-        self.get_openweathermap_secret_key()
-        self.get_openweathermap_paths()
+    def build_df(self):
+        """
+            Build the DataFrame containing OpenWeatherMap ready to be manipulated
+        """
         df_weather_in_cities = self.extract_ww_cities()
         self.df_cities_weather_in_be = self.keep_belgian_cities(
             df_weather_in_cities)
@@ -289,6 +337,11 @@ class OpenWeatherMap():
             self.df_cities_weather_in_be)
         self.save()
 
+    def __init__(self):
+        self.altF1BeHelpers = AltF1BeHelpers()
+        self.get_openweathermap_secret_key()
+        self.get_openweathermap_paths()
+
 
 # %% [code]
 if __name__ == "__main__":
@@ -297,7 +350,9 @@ if __name__ == "__main__":
     openWeatherMap = OpenWeatherMap()
     print(
         f"OpenWeatherMap.org secret_api_key: {(openWeatherMap.secret_api_key)}")
+    openWeatherMap.build_df()
     print(openWeatherMap.df_cities_weather_in_be)
 
+    # store the weather of all cities recoginzed by OpenWeatherMap.org in csv and a json formats
     openWeatherMap.df_cities_weather_in_be.apply(
         openWeatherMap.save_to_file, axis=1, args=[2020, 5, 1, 'csv'])
