@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.4](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.3...v2.0.4) (2020-06-08)
+
+
+### Documentations
+
+* correct grammar and misspellings ([cdcdc1e](https://github.com/ALT-F1/OpenWeatherMap/commit/cdcdc1ef95dbfb0870e72cc2274fb2b33194c64d))
+
 ### [2.0.3](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.2...v2.0.3) (2020-06-08)
 
 
