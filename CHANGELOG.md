@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.4.0...v1.4.1) (2020-06-08)
+
+
+### Chores
+
+* add weather data per day collected from OpenWeatherMap.org and add aggregated weather data by province including the quantiles 25-50-75 ([1807ae8](https://github.com/ALT-F1/OpenWeatherMap/commit/1807ae86b311de3c8207d6d74a0cb2f71747d62b))
+* delete useless historical data since all output data are stored in output_directory ([09d1099](https://github.com/ALT-F1/OpenWeatherMap/commit/09d1099ff1d098c88c781e32e536f3b1cbd8a904))
+
 ## [1.4.0](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.3.2...v1.4.0) (2020-06-08)
 
 
