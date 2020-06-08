@@ -1,4 +1,4 @@
-# Belgian Weather per day per province by using OpenWeatherMap.org and BPost.be datasources
+# Belgian Weather per day per province by using OpenWeatherMap.org and BPost.be data sources
 
 The software collects the Weather of the Belgian communes from the OpenWeatherMap database. See [https://www.openweathermap.org](https://www.openweathermap.org)
 
@@ -177,12 +177,13 @@ The documentation of the **response from the history** of OpenWeatherMap is here
     * `npm run push`
 
 
-# kaggle implementations
+# Kaggle implementations
 
-Kaggle has been used to build the ETL. Here are the utility scripts and notebooks that are available if you want to use get the weather data in Belgium
+Kaggle has been used to build the ETL. Here are the utility scripts and notebooks that are available if you want to get the weather data in Belgium
 
-* bpost_be_postal_code
+* bpost_be_postal_code_helpers
 * altf1be_helpers
+* openweathermap_helpers
 
 
 # Acronyms
