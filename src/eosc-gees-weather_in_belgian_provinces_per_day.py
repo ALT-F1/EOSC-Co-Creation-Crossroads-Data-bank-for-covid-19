@@ -317,7 +317,8 @@ class BelgianCities():
                     if filename.endswith('.csv'):
                         csv_path = os.path.join(dirname, filename)
                         print(
-                            f"loading: {index}/{len(filenames)} - {csv_path}")
+                            f"loading: {index}/{len(filenames)} - {csv_path}"
+                        )
                         df_provinces_collection = pd.concat(
                             [
                                 df_provinces_collection,
@@ -376,6 +377,54 @@ class BelgianCities():
 
         # %% [code]
 
+    def create_df_with_grouped_by_province_with_quartiles(self):
+        """Create one file containing all weather data stored in output_directory/data/by_date
+
+        """
+        t1_start = perf_counter()
+        df_grouped_by_province_with_quartiles = pd.DataFrame()
+
+        openweathermap_org_weather_by_date_directory = self.altF1BeHelpers.output_directory(
+            ['by_province_and_quartile']
+        )
+        print(
+            f"openweathermap_org_weather_by_date_directory: {openweathermap_org_weather_by_date_directory}"
+        )
+        filename_with_collection = os.path.join(
+            self.altF1BeHelpers.output_directory(
+                ['latest']
+            ),
+            f"by_province_and_quartile.csv")
+        index = 0
+        for dirname, _, filenames in os.walk(openweathermap_org_weather_by_date_directory):
+            for filename in filenames:
+                if filename.endswith('.csv'):
+                    csv_path = os.path.join(dirname, filename)
+                    print(
+                        f"loading: {index}/{len(filenames)} - {csv_path}"
+                    )
+                    df_grouped_by_province_with_quartiles = pd.concat(
+                        [
+                            df_grouped_by_province_with_quartiles,
+                            pd.read_csv(csv_path, sep=',')
+                        ]
+                    )
+                index = index+1
+
+        # store current dataframe containing the weather
+        df_grouped_by_province_with_quartiles.to_csv(
+            f"{filename_with_collection}")
+
+        print(
+            f"DataFrame grouped by province and quartile are stored here : {filename_with_collection}")
+
+        t1_stop = perf_counter()
+
+        print("Elapsed time:", t1_stop, t1_start)
+
+        print("create_df_with_grouped_by_province_with_quartiles: Elapsed time during the whole program in seconds:",
+              t1_stop-t1_start)
+
 
 def test_save_json_csv_from_openweathermap(belgianCities):
     merged_df = belgianCities.merge_openweathermap_bpost()
@@ -391,8 +440,13 @@ def test_create_files_by_provinces_and_quartiles(belgianCities):
     belgianCities.create_files_grouped_by_province_with_quartiles()
 
 
+def test_create_df_with_grouped_by_province_with_quartiles(belgianCities):
+    belgianCities.create_df_with_grouped_by_province_with_quartiles()
+
+
 if __name__ == "__main__":
     belgianCities = BelgianCities()
 
     test_save_json_csv_from_openweathermap(belgianCities)
     test_create_files_by_provinces_and_quartiles(belgianCities)
+    test_create_df_with_grouped_by_province_with_quartiles(belgianCities)
