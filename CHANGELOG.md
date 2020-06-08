@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.3](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.2...v2.0.3) (2020-06-08)
+
+
+### Documentations
+
+* add the section '# What are the data available?', rename a heading and the title ([913507e](https://github.com/ALT-F1/OpenWeatherMap/commit/913507e91cf64c6ede61187b1c1b7c877e700f99))
+
 ### [2.0.2](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.1...v2.0.2) (2020-06-08)
 
 
