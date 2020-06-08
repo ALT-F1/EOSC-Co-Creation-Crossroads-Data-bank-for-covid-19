@@ -2,17 +2,20 @@
 # It is defined by the kaggle/python Docker image: https://github.com/kaggle/docker-python
 # For example, here's several helpful packages to load
 
+# libraries
+import os
+import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
+import numpy as np  # linear algebra
 from pathlib import PurePath
-
 from altf1be_helpers import AltF1BeHelpers
 
-import numpy as np  # linear algebra
-import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
+# constants
+PROVINCE_NOT_FOUND = -1
+
 
 # Input data files are available in the read-only "../input/" directory
 # For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory
 
-import os
 for dirname, _, filenames in os.walk('/kaggle/input'):
     for filename in filenames:
         print(os.path.join(dirname, filename))
@@ -61,6 +64,56 @@ class BPost_postal_codes():
                 "Province": ["BRUXELLES", "BRABANT WALLON", "HAINAUT", "BRUXELLES", "HAINAUT", "FLANDRE-OCCIDENTALE", "LIEGE"]
              }
         )
+
+    def translate_provinces_in_french(self, df_postal_codes_in_be):
+        """Translate the provinces inside the BPost.be postal codes in French.
+
+        """
+        df_postal_codes_in_be.loc[df_postal_codes_in_be['Province'] == 'ANTWERPEN', [
+            'Province']] = 'ANVERS'
+        df_postal_codes_in_be.loc[df_postal_codes_in_be['Province'] == 'BRUSSEL', [
+            'Province']] = 'BRUXELLES'
+        df_postal_codes_in_be.loc[df_postal_codes_in_be['Province'] == 'HENEGOUWEN', [
+            'Province']] = 'HAINAUT'
+        df_postal_codes_in_be.loc[df_postal_codes_in_be['Province'] == 'LIMBURG', [
+            'Province']] = 'LIMBOURG'
+        df_postal_codes_in_be.loc[df_postal_codes_in_be['Province'] == 'LUIK', [
+            'Province']] = 'LIEGE'
+        df_postal_codes_in_be.loc[df_postal_codes_in_be['Province'] == 'LUXEMBURG', [
+            'Province']] = 'LUXEMBOURG'
+        df_postal_codes_in_be.loc[df_postal_codes_in_be['Province'] == 'NAMEN', [
+            'Province']] = 'NAMUR'
+        df_postal_codes_in_be.loc[df_postal_codes_in_be['Province']
+                                  == 'OOST-VLAANDEREN', ['Province']] = 'FLANDRE-ORIENTALE'
+        df_postal_codes_in_be.loc[df_postal_codes_in_be['Province']
+                                  == 'WEST-VLAANDEREN', ['Province']] = 'FLANDRE-OCCIDENTALE'
+        df_postal_codes_in_be.loc[df_postal_codes_in_be['Province']
+                                  == 'VLAAMS-BRABANT', ['Province']] = 'BRABANT FLAMAND'
+        df_postal_codes_in_be.loc[df_postal_codes_in_be['Province']
+                                  == 'WAALS-BRABANT', ['Province']] = 'BRABANT WALLON'
+        return df_postal_codes_in_be
+
+    def get_province_from(self, postal_code, df):
+        """Find the Belgian province for a postal code
+
+        Args: 
+            df
+                bpost_postal_codes_grouped_by_province
+        """
+        index = 0
+        # print(type(bpost_postal_codes_grouped_by_province))
+        for cities_in_province in df:
+            is_postal_code_in_list = True if postal_code in cities_in_province else False
+            if is_postal_code_in_list:
+                # print(bpost_postal_codes_grouped_by_province)
+                # print(type(cities_in_province))
+                # print(f"{cities_in_province}")
+                # print(f"{is_postal_code_in_list}")
+                # print(f"{bpost_postal_codes_grouped_by_province.index}")
+                return df.index[index]
+            index = index + 1
+
+        return PROVINCE_NOT_FOUND
 
     def get_postal_codes(self):
         """
@@ -196,3 +249,5 @@ if __name__ == "__main__":
         f"is_interactive() : {bpost_postal_codes.altF1BeHelpers.is_interactive()}")
 
     print(bpost_postal_codes.df_postal_codes_in_be)
+
+
