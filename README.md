@@ -29,7 +29,7 @@ The GEES uses data from researchers, amongst others. Those researchers build mod
 
 One question remains: **does the usage of the Weather data influence (or not) the spread of the virus?**
 
-One of those groups of researchers includes the [Machine Learning Group](https://mlg.ulb.ac.be) (MLG) from the [Université Libre de Bruxelles](https://www.ulb.be). The MLG supports [Marius Gilbert](https://spell.ulb.be/person/marius-gilbert), one member of the GEES, by providing models made of Artificial Intelligence/Machine Learning algorithms. The models built by the MLG influence the Exit Strategy.
+One of those groups of researchers includes the [Machine Learning Group](https://mlg.ulb.ac.be) (MLG) from the [Université Libre de Bruxelles](https://www.ulb.be). The MLG supports the initiative by providing models made of Artificial Intelligence/Machine Learning algorithms. The models built by the MLG influence the Exit Strategy.
 
 # Technical challenges
 
