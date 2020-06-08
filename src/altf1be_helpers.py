@@ -51,7 +51,7 @@ class AltF1BeHelpers:
         return a
 
 
-    def output_directory(self, directories):
+    def output_directory(self, directories=[]) -> str:
         output_directory = '/kaggle/working'
         if self.is_interactive():
             output_directory = os.path.join(
