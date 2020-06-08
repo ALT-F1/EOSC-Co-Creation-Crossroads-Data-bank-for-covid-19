@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.4.2...v2.0.0) (2020-06-08)
+
+
+### Features
+
+* create one CSV file containing all dates for the weather stored in output_directory/data/by_province_and_quartile ([78836da](https://github.com/ALT-F1/OpenWeatherMap/commit/78836dadc328a53252f60fb845b75460afc72ca1))
+
 ### [1.4.2](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.4.1...v1.4.2) (2020-06-08)
 
 
