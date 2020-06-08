@@ -30,12 +30,28 @@ DATA_FROM_FUTURE_IS_UNAVAILABLE = 400000
 
 
 class OpenWeatherMap():
-    """ 
-        The class provides a read-to-use OpenWeatherMap functionalities
+    """The class provides a read-to-use OpenWeatherMap functionalities 
+
     """
 
     def get_history(self, city_id, start, end):
+        """Download the weather data from OpenWeatherMap.org
 
+        See https://openweathermap.org/history
+
+        Parameters
+        ----------
+        city_id : int
+            The city id recognized by OpenWeatherMap.org
+        start : start date (unix time, UTC time zone), e.g. start=1369728000
+        end : end date (unix time, UTC time zone), e.g. end=1369789200
+
+        Returns
+        -------
+        json string
+            json string containing the weather for a specific date
+
+        """
         conn = http.client.HTTPSConnection("history.openweathermap.org")
         payload = ''
         headers = {}
@@ -48,8 +64,8 @@ class OpenWeatherMap():
         return result
 
     def save_to_file(self, current_row, year=2020, month=5, day=1, format='csv'):
-        """
-            get the weather for a specific day for from OpenWeatherMap.org
+        """Get the weather for a specific day for from OpenWeatherMap.org
+
         """
 
         city_name = current_row['city.findname']
@@ -58,8 +74,12 @@ class OpenWeatherMap():
         start_datetime, end_datetime = self.get_range_between_days(
             year, month, day)
 
-        filename = os.path.join(self.altF1BeHelpers.output_directory(['OpenWeatherMap.org', start_datetime.strftime("%Y-%m-%d")]),
-                                f'{city_name}-{start_datetime.strftime("%Y-%m-%d")}')
+        filename = os.path.join(
+            self.altF1BeHelpers.output_directory(
+                ['OpenWeatherMap.org', start_datetime.strftime("%Y-%m-%d")]
+            ),
+            f'{city_name}-{start_datetime.strftime("%Y-%m-%d")}'
+        )
 
         if os.path.exists(f"{filename}.json"):
             print(
@@ -89,8 +109,8 @@ class OpenWeatherMap():
         return weather_json
 
     def csv_to_df(self, json_data):
-        """
-            convert a CSV into a Dataframe
+        """Convert a CSV into a Dataframe
+
         """
         # {'code': 400000, 'message': 'data from future is...available'}
         df_csv = pd.DataFrame(columns=['message',
@@ -166,16 +186,22 @@ class OpenWeatherMap():
         return df_csv
 
     def json_str_to_flat_df(self, json_str):
-        """
-            convert a JSON string into a flat DataFrame
+        """Convert a JSON string into a flat DataFrame
+
         """
         j = json.loads(json_str)
         df_csv = self.csv_to_df(j)
         return df_csv
 
     def get_range_between_days(self, year, month, day):
-        """
-            Return 
+        """Get a range of dates between 2 dates
+
+        Returns
+        -------
+        unix time, UTC time zone
+            start_datetime e.g. end=1369789200
+            end_datetime e.g. end=1369789200
+
         """
 
         start_datetime = datetime.datetime(
