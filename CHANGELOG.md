@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.3.2...v1.4.0) (2020-06-08)
+
+
+### Features
+
+* add a method: translate Belgian provinces in French ([33ffbc0](https://github.com/ALT-F1/OpenWeatherMap/commit/33ffbc062814d0632077577432180733dbea215f))
+* create a directory by_date/yyy-mm-dd/*.{json|csv} containing OpenWeatherMap.org for Belgian cities, and group the weather data by province, and add quantiles 25-50-75 for main.temp, main.feels_like, main.pressure, main.humidity, main.temp, wind.speed, wind.deg ([4da4114](https://github.com/ALT-F1/OpenWeatherMap/commit/4da4114e7ccf53c3b26d35b548c1b4eebe955f46))
+
+
+### Documentations
+
+* add further method' documentation based on python3 best practice ([a8a3a95](https://github.com/ALT-F1/OpenWeatherMap/commit/a8a3a9502498b1ff7dc8d6df0dc49e833fb2f0f5))
+* add further method' documentatoin ([0d8ff91](https://github.com/ALT-F1/OpenWeatherMap/commit/0d8ff917f833fa5c9085d366cb10161309cba6ed))
+
 ### [1.3.2](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.3.1...v1.3.2) (2020-06-07)
 
 
