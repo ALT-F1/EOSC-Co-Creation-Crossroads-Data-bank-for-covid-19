@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.4.1...v1.4.2) (2020-06-08)
+
+
+### Chores
+
+* remove files that were under export_from_openweathermap directory due to a change in the tree structure ([b46ac62](https://github.com/ALT-F1/OpenWeatherMap/commit/b46ac62a6f3c3a8204b6026d06ad0bde420e60f2))
+* remove the first version of the generation of the weather data ([7a79526](https://github.com/ALT-F1/OpenWeatherMap/commit/7a79526ab2860da37c86b54f0b248eb15d2dac63))
+
 ### [1.4.1](https://github.com/ALT-F1/OpenWeatherMap/compare/v1.4.0...v1.4.1) (2020-06-08)
 
 
