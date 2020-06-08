@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.5](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.4...v2.0.5) (2020-06-08)
+
+
+### Styles
+
+* update the picture containing the logo of the contributors to the project ([0fc761d](https://github.com/ALT-F1/OpenWeatherMap/commit/0fc761db0d00ddc0d752d2e7a727d327bcc882f7))
+
 ### [2.0.4](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.3...v2.0.4) (2020-06-08)
 
 
