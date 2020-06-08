@@ -1,15 +1,30 @@
-# Export the Weather data from OpenWeatherMap for the Belgian communes
+# Belgian Weather per day per province by using OpenWeatherMap.org and BPost.be datasources
 
 The software collects the Weather of the Belgian communes from the OpenWeatherMap database. See [https://www.openweathermap.org](https://www.openweathermap.org)
 
 The weather data will be linked to other data to answer one question: "Does the usage of the Weather data influence (or not) the model forecasting the spread of the COVID-19?"
 
-# How to merge OpenWeatherMap.org and BPost.be databases?
+# How to build the DataFrame by using OpenWeatherMap.org and BPost.be databases?
 
 1. Set the api_key from [https://home.openweathermap.org/api_keys](https://home.openweathermap.org/api_keys)
 2. Install python requirements by running `pip install -r requirements.txt`
 3. Run `python src/eosc-gees-weather_in_belgian_provinces_per_day.py`
 4. Look in the `output_directory/data/` directory to manipulate .csv and .json files
+
+# What are the data available?
+
+* Look into the directory [export_directory/data/by_date/yyy-mm-dd](export_directory/data/by_date/yyy-mm-dd)/*.{json|csv}` containing OpenWeatherMap.org for Belgian cities
+
+* Weather data is grouped by province and per day
+* We have computed the quantiles 25-50-75 for the following weather conditions: 
+    * main.feels_like: See [https://openweather.co.uk/blog/post/new-feels-temperature-openweather-apis](https://openweather.co.uk/blog/post/new-feels-temperature-openweather-apis)
+    * main.humidity
+    * main.pressure
+    * main.temp_max: maximal temperature
+    * main.temp_min: minimal temperature
+    * main.temp: temperature
+    * wind.deg
+    * wind.speed
 
 # The context
 
