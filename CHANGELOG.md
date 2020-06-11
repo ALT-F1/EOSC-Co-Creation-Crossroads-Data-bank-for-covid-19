@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.7](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.6...v2.0.7) (2020-06-11)
+
+
+### Bug Fixes
+
+* [#1](https://github.com/ALT-F1/OpenWeatherMap/issues/1) update the generation of 3 dates: June 08-09-10, 2020 ([ea3d5cf](https://github.com/ALT-F1/OpenWeatherMap/commit/ea3d5cf5a20b53e6c5f4749a55cc35f319d67a45))
+
 ### [2.0.6](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.5...v2.0.6) (2020-06-11)
 
 
