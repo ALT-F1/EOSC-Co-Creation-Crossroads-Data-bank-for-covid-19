@@ -431,8 +431,8 @@ def test_save_json_csv_from_openweathermap(belgianCities):
     print(f"belgianCities.merge_openweathermap_bpost: {merged_df}")
 
     # save the weather of all Belgian cities of yesterday (default behavior)
-    belgianCities.save_from_to_date()
-    # belgianCities.save_from_to_date(start_date=datetime(2020, 3, 1)) # store the weather data for a specific date
+    # belgianCities.save_from_to_date()
+    belgianCities.save_from_to_date(start_date=datetime(2020, 6, 1)) # store the weather data for a specific date
     # belgianCities.save_from_to_date(start_date=datetime(2020, 3, 1), end_date=datetime(2020, 3, 31)) # store the weather data for and to a certain date
 
 
