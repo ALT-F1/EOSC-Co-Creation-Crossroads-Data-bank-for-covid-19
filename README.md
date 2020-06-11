@@ -62,13 +62,17 @@ This project joins both databases to enable a link between diverse types of data
 
 # The sponsors of the project
 
+## The EOSC Secretariat
+
 The **EOSC Secretariat** supports the governance of the **E**uropean **O**pen **S**cience **C**loud (EOSC). See [https://www.eoscsecretariat.eu/](https://www.eoscsecretariat.eu)
 
 The EOSC supports projects aiming to make data **F**indable, **A**ccessible, **I**nteroperable, and **R**eproducible (FAIR) for scientists; these combinations would lead to (unforeseen) reuse and faster development of science. 
 
 EOSC Secretariat granted funds to [http://www.alt-f1.be](http://www.alt-f1.be) to create a "Crossroads Data Bank for COVID-19".
 
-Latest news from the European Commission: [https://ec.europa.eu/research/openscience/index.cfm?pg=open-science-cloud](https://ec.europa.eu/research/openscience/index.cfm?pg=open-science-cloud) 
+Read the latest news from the European Commission regarding the Open Science Cloud initiative: [https://ec.europa.eu/research/openscience/index.cfm?pg=open-science-cloud](https://ec.europa.eu/research/openscience/index.cfm?pg=open-science-cloud) 
+
+## OpenWeatherMap
 
 **OpenWeatherMap** provides, free-of-charge, access to weather data to its historical weather data [https://openweathermap.org/api](https://openweathermap.org/api)
 
@@ -77,6 +81,8 @@ OpenWeather Ltd is a British-based tech company that provides weather and satell
 See [Openweather LTD Helps The Fight To Overcome COVID-19](https://bit.ly/2ZohgFF)
 
 # The supporters of the project
+
+## The Machine Learning Group
 
 **The Machine Learning Group**, founded in 2004 by [Gianluca Bontempi](https://mlg.ulb.ac.be/wordpress/members-2/gianluca-bontempi),  is a research unit of the Computer Science Department of the ULB (Université Libre de Bruxelles, Brussels, Belgium), Faculty of Sciences, currently co-headed by Prof. Gianluca Bontempi and Prof. [Tom Lenaerts](https://mlg.ulb.ac.be/wordpress/members-2/tom-lenaerts).
 
@@ -90,7 +96,7 @@ The current software digests data that do not contain personal data.
 
 The output of this project is linked to data that do not contain Personally Identifiable Information (PII). See [https://en.wikipedia.org/wiki/Personal_data](https://en.wikipedia.org/wiki/Personal_data)
 
-# the data models
+# The data models
 
 ## Belgian Postal Codes
 
@@ -125,7 +131,7 @@ OpenWeatherMap provides an API returning the hourly Weather. A call to the API r
 
 Here is an example of a call: `http://history.openweathermap.org/data/2.5/history/city?id={id}&type=hour&start={start}&end={end}&appid={YOUR_API_KEY}`
 
-### the response from the history of OpenWeatherMap
+### The response from the history of OpenWeatherMap
 
 The documentation of the **response from the history** of OpenWeatherMap is here: [https://openweathermap.org/weather-data](https://openweathermap.org/weather-data)
 
@@ -177,6 +183,7 @@ The documentation of the **response from the history** of OpenWeatherMap is here
     * `npm run push`
 
 
+
 # Kaggle implementations
 
 Kaggle has been used to build the ETL. Here are the utility scripts and notebooks that are available if you want to get the weather data in Belgium
@@ -189,3 +196,10 @@ Kaggle has been used to build the ETL. Here are the utility scripts and notebook
 # Acronyms
 
 * ETL: Extract-Transform-Load https://en.wikipedia.org/wiki/Extract,_transform,_load
+
+
+# ALT-F1 SPRL, the software company behind the code
+
+ALT-F1 is a Belgian company based in Brussels. ALT-F1 designs, implements, deploys and supports secure, large-scale software solutions for diverse industries: Manufacturing, MRO, Warehouse, Broadcasting, Bank, Insurance, Defense, Automotive, Law Enforcement, Justice & Serious International Crime.
+
+[http://www.alt-f1.be](http://www.alt-f1.be)
