@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.8](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.7...v2.0.8) (2020-06-11)
+
+
+### Chores
+
+* set the LICENSE to EUROPEAN UNION PUBLIC LICENCE v. 1.2 ([17fa084](https://github.com/ALT-F1/OpenWeatherMap/commit/17fa084fe6f32599eb8e0581ab4c71fcf854b31b))
+
+
+### Documentations
+
+* add sub-headings to improve the visibility of the sponsors, add info about ALT-F1 ([2fdefe2](https://github.com/ALT-F1/OpenWeatherMap/commit/2fdefe22566ac49cb88cf386dc095c9513aa6100))
+
 ### [2.0.7](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.6...v2.0.7) (2020-06-11)
 
 
