@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.9](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.8...v2.0.9) (2020-06-13)
+
+
+### Features
+
+* altf1be_helpers uses atatic methods. Add valid_time, valid_date, count_files_in_dir, input_directory methods ([5658e35](https://github.com/ALT-F1/OpenWeatherMap/commit/5658e358b421b49a27ddbbb00ef328ab5872a694))
+* do not display the secret api in the logs anymore ([64f60bd](https://github.com/ALT-F1/OpenWeatherMap/commit/64f60bd835134de4eba42d4722224cf41eda3674))
+
+
+### Refactorings
+
+* BPost_postal_codes class uses the static methods of altf1be_helpers ([a5a42f2](https://github.com/ALT-F1/OpenWeatherMap/commit/a5a42f2919072deefef082f5955bb798bb8790e7))
+
+
+### Documentations
+
+* add aggregate data up to June 12, 2020 ([23a93d5](https://github.com/ALT-F1/OpenWeatherMap/commit/23a93d570c02986a9a36627c76b4f071693fea60))
+* add weather June 11 and June 12, 2020 ([eae2455](https://github.com/ALT-F1/OpenWeatherMap/commit/eae24557baa86dedf85ff459c32492265f837aa8))
+* add weather June 11, 2020 ([afaf36c](https://github.com/ALT-F1/OpenWeatherMap/commit/afaf36c2e7a931849d18f1218e487c1692ff85e5))
+* add weather June 11, 2020 ([f5aba79](https://github.com/ALT-F1/OpenWeatherMap/commit/f5aba794c0a6c9083c79df36e6336b04c0b8811b))
+* add weather June 12, 2020 ([a7cbb7e](https://github.com/ALT-F1/OpenWeatherMap/commit/a7cbb7e7b6959022bfce02f268bac21016830447))
+
 ### [2.0.8](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.7...v2.0.8) (2020-06-11)
 
 
