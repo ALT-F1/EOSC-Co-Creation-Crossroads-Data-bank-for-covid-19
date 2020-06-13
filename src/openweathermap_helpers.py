@@ -374,8 +374,8 @@ if __name__ == "__main__":
 
     # instanciate OpenWeatherMap
     openWeatherMap = OpenWeatherMap()
-    print(
-        f"OpenWeatherMap.org secret_api_key: {(openWeatherMap.secret_api_key)}")
+    # print(
+    #     f"OpenWeatherMap.org secret_api_key: {(openWeatherMap.secret_api_key)}")
     openWeatherMap.build_df()
     print(openWeatherMap.df_cities_weather_in_be)
 
