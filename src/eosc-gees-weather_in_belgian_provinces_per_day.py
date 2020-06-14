@@ -11,7 +11,7 @@
 # This Python 3 environment comes with many helpful analytics libraries installed
 # It is defined by the kaggle/python Docker image: https://github.com/kaggle/docker-python
 # For example, here's several helpful packages to load
-
+import logging
 import threading
 from datetime import datetime, timedelta, date
 import json
@@ -38,6 +38,16 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
 # You can also write temporary files to /kaggle/temp/, but they won't be saved outside of the current session
 
 # %% [code]
+
+# log info, warning and errors in output_directory/logs/eosc-gees-weather_in_belgian_provinces_per_day.py.log
+
+filename = os.path.join(AltF1BeHelpers.output_directory(
+    ['logs']), 'eosc-gees-weather_in_belgian_provinces_per_day.pylog')
+
+logging.basicConfig(filename=filename, level=logging.DEBUG)
+logging.info(f"log file is stored here : {filename}")
+
+
 # keep: import libraries
 
 FILE_ALREADY_EXISTS = 1
@@ -51,17 +61,78 @@ class BelgianCities():
         # %% [code]
         # keep: get Belgian Postal codes
         self.bpost_postal_codes = BPost_postal_codes()
-        print(self.bpost_postal_codes.df_postal_codes_in_be)
+        logging.info(self.bpost_postal_codes.df_postal_codes_in_be)
 
         # %% [code]
         # keep: get Belgian cities from OpenWeatherMap
         self.openWeatherMap = OpenWeatherMap()
         self.openWeatherMap.build_df()
-        print(self.openWeatherMap.df_cities_weather_in_be)
+        logging.info(self.openWeatherMap.df_cities_weather_in_be)
 
-    def thread_save(self, single_date):
+    def thread_save_uv_index(self, single_date):
         self.df_merged.apply(
-            belgianCities.save_to_file, axis=1, args=[single_date.year, single_date.month, single_date.day, 'csv'])
+            belgianCities.save_uv_index_to_file, axis=1, args=[single_date.year, single_date.month, single_date.day, 'csv'])
+
+    def save_uv_index_to_file(self, current_row, year=2020, month=5, day=1, format='csv'):
+        """Get the weather for a specific day for from OpenWeatherMap.org
+
+        """
+
+        city_name = current_row['city.findname']
+        city_id = current_row['id']
+        city_postal_code = str(current_row['Code postal'])
+
+        start_datetime = datetime(
+            year=year, month=month, day=day, hour=0, minute=0
+        )
+        end_datetime = start_datetime
+
+        filename = os.path.join(
+            self.altF1BeHelpers.output_directory(
+                [
+                    'by_date',
+                    start_datetime.strftime("%Y-%m-%d"),
+                    'uv-index'
+                ]
+            ),
+            f'{city_postal_code.zfill(4)}-{city_name}-{start_datetime.strftime("%Y-%m-%d")}-uv_index'
+        )
+
+        if os.path.exists(f"{filename}.json"):
+            logging.warning(
+                f"UV-Index file already exists: We skip its retrieval from OpenWeathMap.org: {filename}.json")
+            with open(f"{filename}.json") as json_file:
+                weather_json = json.load(json_file)
+            return weather_json
+
+        logging.info(f"UV-Index file stored in : {os.path.dirname(filename)}")
+
+        # get the UV-Index from OpenWeatherMap.org
+        uv_index = self.openWeatherMap.get_historical_uv(
+            lat=current_row['city.coord.lat'],
+            lon=current_row['city.coord.lon'],
+            cnt=1,
+            start_date=start_datetime.strftime('%s'),
+            end_date=end_datetime.strftime('%s')
+        )
+
+        df_csv = pd.DataFrame()
+        if format == 'csv':
+            df_csv = pd.concat(
+                [df_csv, self.openWeatherMap.uv_index_json_str_to_flat_df(uv_index)])
+
+            df_csv.to_csv(f"{filename}.csv", index=False)
+            logging.info(f"UV-Index file stored in : {filename}.csv")
+
+        with open(f"{filename}.json", 'w') as outfile:
+            json.dump(uv_index, outfile, indent=2)
+            logging.info(f"UV-Index file stored in : {filename}.json")
+
+        return uv_index
+
+    def thread_save_weather(self, single_date):
+        self.df_merged.apply(
+            belgianCities.save_weather_to_file, axis=1, args=[single_date.year, single_date.month, single_date.day, 'csv'])
 
     def save_from_to_date(self, start_date=None, end_date=None):
         if start_date is None:
@@ -74,19 +145,28 @@ class BelgianCities():
 
         list_threads = []
         # see https://stackoverflow.com/questions/1060279/iterating-through-a-range-of-dates-in-python
+        # store weather data
         for single_date in self.altF1BeHelpers.daterange(start_date, end_date):
-            x = threading.Thread(target=self.thread_save, args=(single_date,))
+            x = threading.Thread(
+                target=self.thread_save_weather, args=(single_date,))
             list_threads.append(x)
             x.start()
 
-        print(f"All threads are started: {len(list_threads)}")
+        # store UV-Index
+        for single_date in self.altF1BeHelpers.daterange(start_date, end_date):
+            x = threading.Thread(
+                target=self.thread_save_uv_index, args=(single_date,))
+            list_threads.append(x)
+            x.start()
+
+        logging.info(f"All threads are started: {len(list_threads)}")
 
         for t in list_threads:
             t.join()  # Wait until thread terminates its task
 
-    def save_to_file(self, current_row, year=2020, month=5, day=1, format='csv'):
-        """
-            get the weather for a specific day for from OpenWeatherMap.org
+    def save_weather_to_file(self, current_row, year=2020, month=5, day=1, format='csv'):
+        """Get the weather for a specific day for from OpenWeatherMap.org
+
         """
 
         city_name = current_row['city.findname']
@@ -100,13 +180,14 @@ class BelgianCities():
                                 f'{city_postal_code.zfill(4)}-{city_name}-{start_datetime.strftime("%Y-%m-%d")}')
 
         if os.path.exists(f"{filename}.json"):
-            print(
-                f"WARNING: File already exists: We skip its retrieval from OpenWeathMap.org: {filename}.json")
+            logging.warning(
+                f"Weather data file already exists: We skip its retrieval from OpenWeathMap.org: {filename}.json")
             with open(f"{filename}.json") as json_file:
                 weather_json = json.load(json_file)
             return weather_json
 
-        print(f"File stored in : {os.path.dirname(filename)}")
+        logging.info(
+            f"Weather data file stored in : {os.path.dirname(filename)}")
 
         # get the weather from OpenWeatherMap.org
         weather_json = self.openWeatherMap.get_history(
@@ -118,11 +199,11 @@ class BelgianCities():
                 [df_csv, self.openWeatherMap.json_str_to_flat_df(weather_json)])
 
             df_csv.to_csv(f"{filename}.csv", index=False)
-            print(f"File stored in : {filename}.csv")
+            logging.info(f"Weather data file stored in : {filename}.csv")
 
         with open(f"{filename}.json", 'w') as outfile:
             json.dump(weather_json, outfile, indent=2)
-            print(f"File stored in : {filename}.json")
+            logging.info(f"Weather data file stored in : {filename}.json")
 
         return weather_json
 
@@ -140,10 +221,12 @@ class BelgianCities():
         merged_right_localite = merged_right[merged_right['Code postal'].isna()].copy(
             deep=True)
         if (merged_right_localite.shape[0] > 0):
-            print(
-                f"WARNING: They are {merged_right_localite.shape[0]} city.name(s) inside OpenWeatherMap.org db that do not match BPost.be 'Localité'")
-            print(f"ACTION: Add the 'Localité' inside the variable BPost_postal_codes.missing_english_cities and run the code again")
-            print(merged_right_localite)
+            logging.warning(
+                f"They are {merged_right_localite.shape[0]} city.name(s) inside OpenWeatherMap.org db that do not match BPost.be 'Localité'"
+            )
+            logging.warning(
+                f"ACTION: Add the 'Localité' inside the variable BPost_postal_codes.missing_english_cities and run the code again")
+            logging.warning(merged_right_localite)
 
             # The system tries to find missing 'localité' by looking at
 
@@ -287,21 +370,22 @@ class BelgianCities():
                     columns=columns)
 
                 #new_row = pd.DataFrame([date], columns=['message'])
-                print(f"add_quantiles: new_row.shape : {new_row.shape}")
+                logging.info(f"add_quantiles: new_row.shape : {new_row.shape}")
                 # print(f"new_row : {new_row}")
                 #print(f"new_row.columns : {new_row.columns}")
                 df_quantiles = df_quantiles.append(new_row, ignore_index=True)
         return df_quantiles
 
-    def thread_save_quantiles(self, dirname, filenames):
+    def thread_save_weather_quantiles(self, dirname, filenames):
         index = 0
         df_provinces_collection = pd.DataFrame()  # one dataframe per province
         directory_by_date = os.path.basename(os.path.normpath(dirname))
         mat = re.match('(\d{4})[/.-](\d{2})[/.-](\d{2})$',
                        directory_by_date)
         if mat is None:
-            print(
-                f"{directory_by_date} DOES NOT match a date, we skip the directory")
+            logging.warning(
+                f"{directory_by_date} DOES NOT match a date, we skip the directory"
+            )
         else:
             filename_with_collection = os.path.join(
                 self.altF1BeHelpers.output_directory(
@@ -310,14 +394,15 @@ class BelgianCities():
                 f"{directory_by_date}.csv")
 
             if os.path.exists(filename_with_collection):
-                print(
-                    f"WARNING: File already exists: We skip the grouping by province: {filename_with_collection}")
+                logging.warning(
+                    f"File already exists: We skip the grouping by province: {filename_with_collection}"
+                )
             else:
                 for filename in filenames:
                     if filename.endswith('.csv'):
                         csv_path = os.path.join(dirname, filename)
-                        print(
-                            f"loading: {index}/{len(filenames)} - {csv_path}"
+                        logging.info(
+                            f"Loading: {index}/{len(filenames)} - {csv_path}"
                         )
                         df_provinces_collection = pd.concat(
                             [
@@ -337,8 +422,9 @@ class BelgianCities():
 
                 # df_quantiles.to_pickle(f"{output_filename_with_collection}.pkl")
 
-                print(
-                    f"DataFrame grouped by province and quartile are stored here : {filename_with_collection}")
+                logging.info(
+                    f"DataFrame grouped by province and quartile are stored here : {filename_with_collection}"
+                    )
 
             df_provinces_collection = pd.DataFrame()
 
@@ -352,27 +438,28 @@ class BelgianCities():
         openweathermap_org_weather_by_date_directory = self.altF1BeHelpers.output_directory([
                                                                                             'by_date'])
 
-        print(
-            f"openweathermap_org_weather_by_date_directory: {openweathermap_org_weather_by_date_directory}")
+        logging.info(
+            f"openweathermap_org_weather_by_date_directory: {openweathermap_org_weather_by_date_directory}"
+            )
 
         list_threads = []
 
         for dirname, _, filenames in os.walk(openweathermap_org_weather_by_date_directory):
             x = threading.Thread(
-                target=self.thread_save_quantiles, args=(dirname, filenames))
+                target=self.thread_save_weather_quantiles, args=(dirname, filenames))
             list_threads.append(x)
             x.start()
 
-        print(f"All threads are started: {len(list_threads)}")
+        logging.info(f"All threads are started: {len(list_threads)}")
 
         for t in list_threads:
             t.join()  # Wait until thread terminates its task
 
         t1_stop = perf_counter()
 
-        print("Elapsed time:", t1_stop, t1_start)
+        logging.info("Elapsed time:", t1_stop, t1_start)
 
-        print("Elapsed time during the whole program in seconds:",
+        logging.info("Elapsed time during the whole program in seconds:",
               t1_stop-t1_start)
 
         # %% [code]
@@ -387,7 +474,7 @@ class BelgianCities():
         openweathermap_org_weather_by_date_directory = self.altF1BeHelpers.output_directory(
             ['by_province_and_quartile']
         )
-        print(
+        logging.info(
             f"openweathermap_org_weather_by_date_directory: {openweathermap_org_weather_by_date_directory}"
         )
         filename_with_collection = os.path.join(
@@ -400,8 +487,8 @@ class BelgianCities():
             for filename in filenames:
                 if filename.endswith('.csv'):
                     csv_path = os.path.join(dirname, filename)
-                    print(
-                        f"loading: {index}/{len(filenames)} - {csv_path}"
+                    logging.info(
+                        f"Loading: {index}/{len(filenames)} - {csv_path}"
                     )
                     df_grouped_by_province_with_quartiles = pd.concat(
                         [
@@ -415,24 +502,25 @@ class BelgianCities():
         df_grouped_by_province_with_quartiles.to_csv(
             f"{filename_with_collection}")
 
-        print(
+        logging.info(
             f"DataFrame grouped by province and quartile are stored here : {filename_with_collection}")
 
         t1_stop = perf_counter()
 
-        print("Elapsed time:", t1_stop, t1_start)
+        logging.info("Elapsed time:", t1_stop, t1_start)
 
-        print("create_df_with_grouped_by_province_with_quartiles: Elapsed time during the whole program in seconds:",
+        logging.info("create_df_with_grouped_by_province_with_quartiles: Elapsed time during the whole program in seconds:",
               t1_stop-t1_start)
 
 
 def test_save_json_csv_from_openweathermap(belgianCities):
     merged_df = belgianCities.merge_openweathermap_bpost()
-    print(f"belgianCities.merge_openweathermap_bpost: {merged_df}")
+    logging.info(f"belgianCities.merge_openweathermap_bpost: {merged_df}")
 
     # save the weather of all Belgian cities of yesterday (default behavior)
     # belgianCities.save_from_to_date()
-    belgianCities.save_from_to_date(start_date=datetime(2020, 6, 1)) # store the weather data for a specific date
+    # store the weather data for a specific date
+    belgianCities.save_from_to_date(start_date=datetime(2020, 3, 1))
     # belgianCities.save_from_to_date(start_date=datetime(2020, 3, 1), end_date=datetime(2020, 3, 31)) # store the weather data for and to a certain date
 
 
