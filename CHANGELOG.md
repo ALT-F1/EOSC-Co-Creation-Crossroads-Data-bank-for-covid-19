@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.1](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.1.0...v2.1.1) (2020-06-14)
+
+
+### Documentations
+
+* the application collects the raw AV-Index from OpenWeatherMap.org ([b0caf79](https://github.com/ALT-F1/OpenWeatherMap/commit/b0caf799a9207e13b6640662e7998ff45b65f573))
+
 ## [2.1.0](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.10...v2.1.0) (2020-06-14)
 
 
