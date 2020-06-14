@@ -4,6 +4,7 @@
 # For example, here's several helpful packages to load
 
 # initialize libraries
+import logging
 import http.client
 import datetime
 import json
@@ -25,14 +26,118 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
 
 # %% [code]
 
+filename = os.path.join(AltF1BeHelpers.output_directory(
+    ['logs']), 'openweathermap_helpers.py.log')
+
+logging.basicConfig(filename=filename, level=logging.DEBUG)
+logging.info(f"log file is stored here : {filename}")
+
 # initialize constants
 DATA_FROM_FUTURE_IS_UNAVAILABLE = 400000
 
 
 class OpenWeatherMap():
-    """The class provides a read-to-use OpenWeatherMap functionalities 
+    """The class provides a read-to-use OpenWeatherMap functionalities
 
     """
+
+    def get_historical_uv(self, lat, lon, cnt, start_date, end_date):
+        """Download the UV-Index (Ultraviolet) from OpenWeatherMap.org
+
+        See: https://en.wikipedia.org/wiki/Ultraviolet_index
+
+        Sample url: https://api.openweathermap.org/data/2.5/uvi/history?appid={{your_api_key}}&lat={{lat}}&lon={{lon}}&cnt={{cnt}}&start={{start date}}&end={{end date}}
+
+        Returns
+        -------
+
+        [
+            {
+                "lat": 50.850449,
+                "lon": 4.34878,
+                "date_iso": "2020-04-24T12:00:00Z",
+                "date": 1587729600,
+                "value": 5.55
+            }
+        ]
+
+        """
+
+        conn = http.client.HTTPSConnection("api.openweathermap.org")
+        payload = ''
+        headers = {}
+        url = f"/data/2.5/uvi/history?appid={self.secret_api_key}&lat={lat}&lon={lon}&cnt={cnt}&start={start_date}&end={end_date}"
+
+        conn.request(
+            "GET",
+            url,
+            payload,
+            headers
+        )
+        res = conn.getresponse()
+        data = res.read()
+        result = data.decode("utf-8")
+        # print(result)
+        return result
+
+    def save_uv_index_to_file(self, current_row, year=2020, month=5, day=1, format='csv'):
+        """
+            get the UV Index for a specific day from OpenWeatherMap.org
+        """
+        
+        city_name = current_row['city.findname']
+        city_id = current_row['id']
+
+        start_datetime = datetime.datetime(
+            year=year, month=month, day=day, hour=0, minute=0
+        )
+        end_datetime = start_datetime
+
+        print(f'save_uv_index_to_file : save file: {start_datetime.strftime("%Y-%m-%d")}')
+
+        filename = os.path.join(
+            self.altF1BeHelpers.output_directory(
+                [
+                    'OpenWeatherMap.org',
+                    start_datetime.strftime("%Y-%m-%d"),
+                    'uv-index'
+                ]
+            ),
+            f'{city_name}-{start_datetime.strftime("%Y-%m-%d")}-uv_index'
+        )
+
+        if os.path.exists(f"{filename}.json"):
+            logging.warning(
+                f"WARNING: UV-Index file already exists: We skip its retrieval from OpenWeathMap.org: {filename}.json"
+            )
+            with open(f"{filename}.json") as json_file:
+                uv_index = json.load(json_file)
+            return uv_index
+
+        logging.info(f"UV-Index file stored in : {os.path.dirname(filename)}")
+
+        # Get the UV-Index from OpenWeatherMap.org
+        uv_index = self.get_historical_uv(
+            lat=current_row['city.coord.lat'],
+            lon=current_row['city.coord.lon'],
+            cnt=1,
+            start_date=start_datetime.strftime('%s'),
+            end_date=end_datetime.strftime('%s')
+        )
+
+        df_csv = pd.DataFrame()
+        if format == 'csv':
+            df_csv = pd.concat(
+                [df_csv, self.uv_index_json_str_to_flat_df(uv_index)])
+
+            df_csv.to_csv(f"{filename}.csv", index=False)
+            logging.info(f"File stored in : {filename}.csv")
+
+        with open(f"{filename}.json", 'w') as outfile:
+            json.dump(uv_index, outfile, indent=2)
+            logging.info(f"File stored in : {filename}.json")
+
+        return uv_index
 
     def get_history(self, city_id, start, end):
         """Download the weather data from OpenWeatherMap.org
@@ -63,9 +168,8 @@ class OpenWeatherMap():
         # print(result)
         return result
 
-    def save_to_file(self, current_row, year=2020, month=5, day=1, format='csv'):
-        """Get the weather for a specific day for from OpenWeatherMap.org
-
+    def save_weather_to_file(self, current_row, year=2020, month=5, day=1, format='csv'):
+        """Get the weather for a specific day from OpenWeatherMap.org
         """
 
         city_name = current_row['city.findname']
@@ -78,17 +182,17 @@ class OpenWeatherMap():
             self.altF1BeHelpers.output_directory(
                 ['OpenWeatherMap.org', start_datetime.strftime("%Y-%m-%d")]
             ),
-            f'{city_name}-{start_datetime.strftime("%Y-%m-%d")}'
+            f'{city_name}-{start_datetime.strftime("%Y-%m-%d")}-weather'
         )
 
         if os.path.exists(f"{filename}.json"):
-            print(
-                f"File already exists: We skip its retrieval from OpenWeathMap.org: {filename}.json")
+            logging.warning(
+                f"WARNING: Weather file already exists: We skip its retrieval from OpenWeathMap.org: {filename}.json")
             with open(f"{filename}.json") as json_file:
                 weather_json = json.load(json_file)
             return weather_json
 
-        print(f"File stored in : {os.path.dirname(filename)}")
+        logging.info(f"Weather file stored in : {os.path.dirname(filename)}")
 
         # get the weather from OpenWeatherMap.org
         weather_json = self.get_history(
@@ -97,18 +201,18 @@ class OpenWeatherMap():
         df_csv = pd.DataFrame()
         if format == 'csv':
             df_csv = pd.concat(
-                [df_csv, self.json_str_to_flat_df(weather_json)])
+                [df_csv, self.weather_json_str_to_flat_df(weather_json)])
 
             df_csv.to_csv(f"{filename}.csv", index=False)
-            print(f"File stored in : {filename}.csv")
+            logging.info(f"Weather file stored in : {filename}.csv")
 
         with open(f"{filename}.json", 'w') as outfile:
             json.dump(weather_json, outfile, indent=2)
-            print(f"File stored in : {filename}.json")
+            logging.info(f"Weather file stored in : {filename}.json")
 
         return weather_json
 
-    def csv_to_df(self, json_data):
+    def weather_csv_to_df(self, json_data):
         """Convert a CSV into a Dataframe
 
         """
@@ -140,9 +244,9 @@ class OpenWeatherMap():
             # openweathermap sent a reponse including wheater data
             pass
         else:
-            print("TODO: handle this error")
-            print("json_data: {json_data}")
-            print("Unexpected error:", sys.exc_info()[0])
+            logging.error("TODO: handle this error")
+            logging.erro("json_data: {json_data}")
+            logging.error("Unexpected error:", sys.exc_info()[0])
             raise
 
         message = json_data["message"]
@@ -185,12 +289,20 @@ class OpenWeatherMap():
 
         return df_csv
 
-    def json_str_to_flat_df(self, json_str):
+    def weather_json_str_to_flat_df(self, json_str):
         """Convert a JSON string into a flat DataFrame
 
         """
         j = json.loads(json_str)
-        df_csv = self.csv_to_df(j)
+        df_csv = self.weather_csv_to_df(j)
+        return df_csv
+
+    def uv_index_json_str_to_flat_df(self, json_str):
+        """Convert a UV-Index JSON string into a flat DataFrame
+
+        """
+
+        df_csv = df = pd.read_json(json_str, convert_dates=False)
         return df_csv
 
     def get_range_between_days(self, year, month, day):
@@ -212,7 +324,8 @@ class OpenWeatherMap():
             year=year, month=month, day=day, hour=23, minute=0)
         printable_end_datetime = end_datetime.strftime("%Y-%m-%d_%Hh%M")
 
-        print(f"{printable_start_datetime}, {printable_end_datetime}")
+        logging.info(
+            f"get_range_between_days: {printable_start_datetime}, {printable_end_datetime}")
 
         return start_datetime, end_datetime
 
@@ -231,7 +344,8 @@ class OpenWeatherMap():
             year=year, month=month, day=end_day, hour=23, minute=0)
         printable_end_datetime = end_datetime.strftime("%Y-%m-%d_%Hh%M")
 
-        print(f"{printable_start_datetime}, {printable_end_datetime}")
+        logging.info(
+            f"get_range_in_a_month: {printable_start_datetime}, {printable_end_datetime}")
 
         return start_datetime, end_datetime
 
@@ -250,10 +364,10 @@ class OpenWeatherMap():
             print(f"OpenWeatherMap.org secret key found inside the Kaggle secret keys")
         except KeyError:
             print("KeyError: the secret key does not exist on Kaggle")
-            #print("(Un)expected error:", sys.exc_info()[0])
+            # print("(Un)expected error:", sys.exc_info()[0])
         except ModuleNotFoundError:
             print("INFO: you may not be running kaggle, the OpenWeaterMap.org API KEY will be collected from the environment variable")
-            #print("(Un)expected error:", sys.exc_info()[0])
+            # print("(Un)expected error:", sys.exc_info()[0])
 
         # Set the api_key and the paths on a regular OS
         if (self.secret_api_key == None):
@@ -268,7 +382,7 @@ class OpenWeatherMap():
                     "Consider adding an environment variable if OpenWeatherMap.org triggers an error related to the API TOKEN")
 
         if (self.secret_api_key == None):
-            print(
+            logging.error(
                 f"ERROR: OpenWeatherMap.org secret was NOT found inside Kaggle nor the environment variables")
 
         return self.secret_api_key
@@ -288,7 +402,7 @@ class OpenWeatherMap():
                 history_city_list_path
             )
 
-        print(f"history_city_list_path: {self.history_city_list_path}")
+        logging.info(f"history_city_list_path: {self.history_city_list_path}")
 
         return self.history_city_list_path
 
@@ -296,6 +410,15 @@ class OpenWeatherMap():
         """
 
         """
+
+        # set the
+        for i, row in df[df['city.coord.lon'].isna()].iterrows():
+            df.at[i, 'city.coord.lon'] = row['city.coord.lon.$numberLong']
+            # df.loc[index]['city.coord.lon'] = df.loc[index]['city.coord.lon.$numberLong']
+
+        for i, row in df[df['city.coord.lat'].isna()].iterrows():
+            row['city.coord.lat'] = row['city.coord.lat.$numberLong']
+
         # Transform: remove unnecessary columns and rename the column (city.id.$numberLong'->id)
         df = df.drop(columns=[
             'id',
@@ -380,5 +503,9 @@ if __name__ == "__main__":
     print(openWeatherMap.df_cities_weather_in_be)
 
     # store the weather of all cities recoginzed by OpenWeatherMap.org in csv and a json formats
+    # openWeatherMap.df_cities_weather_in_be.apply(
+    #     openWeatherMap.save_weather_to_file, axis=1, args=[2020, 5, 1, 'csv'])
+
+    # store the UV Index of all cities recoginzed by OpenWeatherMap.org in csv and a json formats
     openWeatherMap.df_cities_weather_in_be.apply(
-        openWeatherMap.save_to_file, axis=1, args=[2020, 5, 1, 'csv'])
+        openWeatherMap.save_uv_index_to_file, axis=1, args=[2020, 3, 1, 'csv'])
