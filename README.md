@@ -1,8 +1,8 @@
-# Belgian Weather per day per province by using OpenWeatherMap.org and BPost.be data sources
+# Belgian Weather, UV-Index per day per province by using OpenWeatherMap.org and BPost.be data sources
 
-The software collects the Weather of the Belgian communes from the OpenWeatherMap database. See [https://www.openweathermap.org](https://www.openweathermap.org)
+The software collects the Weather and the UV-Index of the Belgian communes from the OpenWeatherMap database. See [https://www.openweathermap.org](https://www.openweathermap.org)
 
-The weather data will be linked to other data to answer one question: "Does the usage of the Weather data influence (or not) the model forecasting the spread of the COVID-19?"
+The weather data will be linked to other data to answer one question: "Does the usage of the Weather or UV-Index data influence (or not) the model forecasting the spread of the COVID-19?"
 
 # How to build the DataFrame by using OpenWeatherMap.org and BPost.be databases?
 
@@ -13,7 +13,7 @@ The weather data will be linked to other data to answer one question: "Does the 
 
 # What are the data available?
 
-* Look into the directory [export_directory/data/by_date/yyy-mm-dd](export_directory/data/by_date/yyy-mm-dd)/*.{json|csv}` containing OpenWeatherMap.org for Belgian cities
+* Look into the directory [export_directory/data/by_date/yyyy-mm-dd](export_directory/data/by_date/yyyy-mm-dd)/*.{json|csv}` containing OpenWeatherMap.org for Belgian cities
 
 * Weather data is grouped by province and per day
 * We have computed the quantiles 25-50-75 for the following weather conditions: 
@@ -34,7 +34,7 @@ Universities and private companies contribute to the analysis of data useful to 
 
 Those persons include researchers and consultants who share their analysis to the public administration and members of governments who will shape the rules and regulations describing how the citizens should behave during the pandemic.
 
-# Why collecting the weather data?
+# Why collecting the Weather and UV-Index data?
 
 In Belgium, the  Group of Experts for an Exit Strategy (GEES) drafts proposals to envisage a gradual deconfinement. The GEES supports the [Belgian Federal Government](https://www.belgium.be/en/about_belgium/government/federal_authorities/federal_government).
 
@@ -42,7 +42,7 @@ See also [https://www.info-coronavirus.be/en](https://www.info-coronavirus.be/en
 
 The GEES uses data from researchers, amongst others. Those researchers build models of the spread of the virus by using diverse data: mobility, health, beds in hospitals, fatalities, current regulation ...
 
-One question remains: **does the usage of the Weather data influence (or not) the spread of the virus?**
+One question remains: **does the usage of the Weather or UV-Index data influence (or not) the spread of the virus?**
 
 One of those groups of researchers includes the [Machine Learning Group](https://mlg.ulb.ac.be) (MLG) from the [Université Libre de Bruxelles](https://www.ulb.be). The MLG supports the initiative by providing models made of Artificial Intelligence/Machine Learning algorithms. The models built by the MLG influence the Exit Strategy.
 
@@ -166,6 +166,29 @@ The documentation of the **response from the history** of OpenWeatherMap is here
     }
 },
 ```
+## OpenWeatherMap UV-Index data
+
+OpenWeatherMap provides an API returning daily UV-Index. A call to the API returns 1 to many consecutive days of data.
+[https://openweathermap.org/api/uvi](https://openweathermap.org/api/uvi)
+
+* Run `python src/openweathermap_helpers.py` generates UV-Index data for one day in this directory `OpenWeatherMap/output_directory/data/OpenWeatherMap.org/YYYY-MM-DD/{city name}-YYYY-MM-DD-uv_index.json`
+
+```csv
+lat,lon,date_iso,date,value
+50.990639,5.36819,2020-06-12T12:00:00Z,1591963200,6.93
+```
+
+```json
+[
+  {
+    "lat": 50.990639,
+    "lon": 5.36819,
+    "date_iso": "2020-06-12T12:00:00Z",
+    "date": 1591963200,
+    "value": 6.93
+  }
+]
+```
 
 # How to contribute to software development
 
@@ -181,8 +204,6 @@ The documentation of the **response from the history** of OpenWeatherMap is here
 
 * push the code including the tags
     * `npm run push`
-
-
 
 # Kaggle implementations
 
