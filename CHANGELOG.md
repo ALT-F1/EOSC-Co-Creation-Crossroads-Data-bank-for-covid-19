@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.10](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.9...v2.0.10) (2020-06-14)
+
+
+### Documentations
+
+* add weather for June 13, 2020 ([0d47bfb](https://github.com/ALT-F1/OpenWeatherMap/commit/0d47bfb57ae342c5078fa60f7b2bc393f744a995))
+
 ### [2.0.9](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.8...v2.0.9) (2020-06-13)
 
 
