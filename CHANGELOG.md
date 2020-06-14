@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.10...v2.1.0) (2020-06-14)
+
+
+### Features
+
+* get Ultraviolet index UV-Inde from openweathermap.org, add logging stored in output_directory/logs/eosc-gees-weather_in_belgian_provinces_per_day.py.log ([24bc4a0](https://github.com/ALT-F1/OpenWeatherMap/commit/24bc4a09f2dea6f9ff912c88ffcf978fe7ddd52c))
+* get Ultraviolet index UV-Inde from openweathermap.org, add logging stored in output_directory/logs/openweathermap_helpers.py.log ([d343c10](https://github.com/ALT-F1/OpenWeatherMap/commit/d343c1024db3c89e943c43fbe77c4be42c65383c))
+
+
+### Documentations
+
+* add UV-Index for all cities in Belgium from March 01,2020 to June 13, 2020 ([259f453](https://github.com/ALT-F1/OpenWeatherMap/commit/259f4532ab310b518065e55633b96cda268eb90c))
+
 ### [2.0.10](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.0.9...v2.0.10) (2020-06-14)
 
 
