@@ -44,12 +44,13 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
 # log info, warning and errors in output_directory/logs/eosc-gees-weather_in_belgian_provinces_per_day.py.log
 
 filename = os.path.join(AltF1BeHelpers.output_directory(
-    ['logs']), 'eosc-gees-weather_in_belgian_provinces_per_day.pylog')
+    ['logs']), 'eosc-gees-weather_in_belgian_provinces_per_day.py.log'
+)
 
 logging.basicConfig(filename=filename, level=logging.DEBUG)
 logging.info(f"log file is stored here : {filename}")
 logging.info(
-    f'start logging at {datetime.now().strftime("%m/%d/%Y, %H:%M:%S")}'
+    f'start logging at {datetime.now().strftime("%d/%m/%Y, %H:%M:%S")}'
 )
 
 
@@ -212,11 +213,12 @@ class BelgianCities():
                 weather_json = json.load(json_file)
             return weather_json
 
-        logging.info(
-            f"Weather data file stored in : {os.path.dirname(filename)}")
+        # logging.info(
+        #     f"Weather data file stored in : {os.path.dirname(filename)}"
+        # )
 
         # get the weather from OpenWeatherMap.org
-        weather_json = self.openWeatherMap.get_history(
+        weather_json = self.openWeatherMap.get_historical_weather(
             city_id,
             int(start_datetime.timestamp()),
             int(end_datetime.timestamp())
@@ -854,7 +856,7 @@ def test_save_json_csv_from_openweathermap(belgianCities):
         # store the weather data for a specific date
         belgianCities.save_from_to_date(
             start_date=datetime(
-                year=2020, month=6, day=14
+                year=2020, month=3, day=1
             ).replace(
                 tzinfo=timezone('UTC')
             )
@@ -905,3 +907,6 @@ if __name__ == "__main__":
     logging.info(
         f"__main__: Elapsed time during the whole program in seconds:  {t1_stop-t1_start}"
     )
+    print(f"__main__: Elapsed time: {t1_stop}, {t1_start}")
+    print(
+        f"__main__: Elapsed time during the whole program in seconds:  {t1_stop-t1_start}")
