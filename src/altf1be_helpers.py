@@ -7,6 +7,8 @@ from pathlib import Path
 from os import path
 import numpy as np  # linear algebra
 import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
+from dateutil.tz import tzutc
+from dateutil.parser import parse
 
 # Input data files are available in the read-only "../input/" directory
 # For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory
@@ -27,6 +29,13 @@ MISSING_LIBRARY = -1
 # import libraries
 
 class AltF1BeHelpers:
+
+    @staticmethod
+    def date_utc(s):
+        """Used to set time zone of values in a Pandas DataFrame
+
+        """
+        return parse(s, tzinfos=tzutc)
 
     @staticmethod
     def valid_time(string):
