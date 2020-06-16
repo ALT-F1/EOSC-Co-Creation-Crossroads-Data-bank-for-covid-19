@@ -9,7 +9,8 @@ The weather data will be linked to other data to answer one question: "Does the 
 1. Set the api_key from [https://home.openweathermap.org/api_keys](https://home.openweathermap.org/api_keys)
 2. Install python requirements by running `pip install -r requirements.txt`
 3. Run `python src/eosc-gees-weather_in_belgian_provinces_per_day.py`
-4. Look in the `output_directory/data/` directory to manipulate .csv and .json files
+4. Look in the [output_directory/data](output_directory/data) directory to manipulate .csv and .json files
+5. Manipulate the aggregated version of the data on [output_directory/data/latest/by_province_and_quartile.csv](output_directory/data/latest/by_province_and_quartile.csv)
 
 # What are the data available?
 
@@ -25,6 +26,7 @@ The weather data will be linked to other data to answer one question: "Does the 
     * main.temp: temperature
     * wind.deg
     * wind.speed
+    * uv-index
 
 # The context
 
