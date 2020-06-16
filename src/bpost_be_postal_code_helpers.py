@@ -101,15 +101,17 @@ class BPost_postal_codes():
         """
         index = 0
         # print(type(bpost_postal_codes_grouped_by_province))
+        df = df.aggregate(set)['Code postal']
         for cities_in_province in df:
-            is_postal_code_in_list = True if postal_code in cities_in_province else False
+            # for index in range(0, len(df.aggregate(set)['Code postal'])):
+            # cities_in_province in postal_code in df.aggregate(tuple)['Code postal']:
+            is_postal_code_in_list = True if (
+                postal_code in cities_in_province) else False
+            #is_postal_code_in_list = True if (postal_code in df.aggregate(tuple)['Code postal'][index]) else False
             if is_postal_code_in_list:
-                # print(bpost_postal_codes_grouped_by_province)
-                # print(type(cities_in_province))
-                # print(f"{cities_in_province}")
-                # print(f"{is_postal_code_in_list}")
-                # print(f"{bpost_postal_codes_grouped_by_province.index}")
                 return df.index[index]
+                # return df.aggregate(tuple)['Code postal'][index]
+
             index = index + 1
 
         return PROVINCE_NOT_FOUND
@@ -129,12 +131,14 @@ class BPost_postal_codes():
         self.postal_codes_in_be_from_bpost_be_in_fr = pd.read_csv(
             self.postal_codes_in_be_from_bpost_be_in_fr_path,
             sep=',',
-            header=0
+            header=0,
+            date_parser=AltF1BeHelpers.date_utc
         )
         self.postal_codes_in_be_from_bpost_be_in_nl = pd.read_csv(
             self.postal_codes_in_be_from_bpost_be_in_nl_path,
             sep=',',
-            header=0
+            header=0,
+            date_parser=AltF1BeHelpers.date_utc
         )
 
         # rename the columns in NL to facilitate the concatenation
@@ -248,5 +252,3 @@ if __name__ == "__main__":
         f"is_interactive() : {AltF1BeHelpers.is_interactive()}")
 
     print(bpost_postal_codes.df_postal_codes_in_be)
-
-
