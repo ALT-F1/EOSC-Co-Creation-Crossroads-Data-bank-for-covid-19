@@ -18,6 +18,7 @@ import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
 # For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory
 import sys
 import os
+import socket
 for dirname, _, filenames in os.walk('/kaggle/input'):
     for filename in filenames:
         print(os.path.join(dirname, filename))
@@ -31,7 +32,7 @@ filename = os.path.join(AltF1BeHelpers.output_directory(
     ['logs']), 'openweathermap_helpers.py.log')
 
 logging.basicConfig(filename=filename, level=logging.DEBUG)
-logging.info(f"log file is stored here : {filename}")
+logging.info(f"Log file is stored here : {filename}")
 
 # initialize constants
 DATA_FROM_FUTURE_IS_UNAVAILABLE = 400000
@@ -42,7 +43,7 @@ class OpenWeatherMap():
 
     """
 
-    def get_historical_uv(self, lat, lon, cnt, start_date, end_date):
+    def get_historical_uv_http(self, lat, lon, cnt, start_date, end_date):
         """Download the UV-Index (Ultraviolet) from OpenWeatherMap.org
 
         See: https://en.wikipedia.org/wiki/Ultraviolet_index
@@ -69,14 +70,62 @@ class OpenWeatherMap():
         headers = {}
         url = f"/data/2.5/uvi/history?appid={self.secret_api_key}&lat={lat}&lon={lon}&cnt={cnt}&start={start_date}&end={end_date}"
 
-        conn.request(
-            "GET",
-            url,
-            payload,
-            headers
-        )
+        try:
+            conn.request(
+                "GET",
+                url,
+                payload,
+                headers
+            )
+        except socket.gaierror:
+            msg1 = f"{AltF1BeHelpers.hide_secrets_from_url(url)}"
+            msg2 = f"get_historical_uv: socket.gaierror error: {sys.exc_info()}"
+            print(f"{msg1}\n{msg2}")
+            logging.error(msg1)
+            logging.error(msg2)
+        except:
+            msg1 = f"{AltF1BeHelpers.hide_secrets_from_url(url)}"
+            msg2 = f"get_historical_uv: {sys.exc_info()}"
+            print(f"{msg1}\n{msg2}")
+            logging.error(msg1)
+            logging.error(msg2)
+
         res = conn.getresponse()
         data = res.read()
+        result = data.decode("utf-8")
+        # print(result)
+        return result
+
+    def get_historical_uv(self, lat, lon, cnt, start_date, end_date):
+        """Download the UV-Index (Ultraviolet) from OpenWeatherMap.org
+
+        See: https://en.wikipedia.org/wiki/Ultraviolet_index
+
+        Sample url: https://api.openweathermap.org/data/2.5/uvi/history?appid={{your_api_key}}&lat={{lat}}&lon={{lon}}&cnt={{cnt}}&start={{start date}}&end={{end date}}
+
+        Returns
+        -------
+
+        [
+            {
+                "lat": 50.850449,
+                "lon": 4.34878,
+                "date_iso": "2020-04-24T12:00:00Z",
+                "date": 1587729600,
+                "value": 5.55
+            }
+        ]
+
+        """
+        protocol = "https://"
+        base_url = "api.openweathermap.org"
+        url = f"/data/2.5/uvi/history?appid={self.secret_api_key}&lat={lat}&lon={lon}&cnt={cnt}&start={start_date}&end={end_date}"
+        url_to_call = f"{protocol}{base_url}{url}"
+        res = AltF1BeHelpers.requests_retry_session().get(url_to_call)
+        logging.info(
+            f"http status: {res.status_code} for {AltF1BeHelpers.hide_secrets_from_url(url)}")
+
+        data = res.content
         result = data.decode("utf-8")
         # print(result)
         return result
@@ -122,7 +171,7 @@ class OpenWeatherMap():
                 uv_index = json.load(json_file)
             return uv_index
 
-        logging.info(f"UV-Index file stored in : {os.path.dirname(filename)}")
+        # logging.info(f"UV-Index file stored in : {os.path.dirname(filename)}")
 
         # Get the UV-Index from OpenWeatherMap.org
         uv_index = self.get_historical_uv(
@@ -147,7 +196,7 @@ class OpenWeatherMap():
 
         return uv_index
 
-    def get_history(self, city_id, start, end):
+    def get_historical_weather_http(self, city_id, start, end):
         """Download the weather data from OpenWeatherMap.org
 
         See https://openweathermap.org/history
@@ -172,6 +221,41 @@ class OpenWeatherMap():
             "GET", f"/data/2.5/history/city?id={city_id}&start={start}&end={end}&appid={self.secret_api_key}", payload, headers)
         res = conn.getresponse()
         data = res.read()
+        result = data.decode("utf-8")
+        # print(result)
+        return result
+
+    def get_historical_weather(self, city_id, start, end):
+        """Download the weather data from OpenWeatherMap.org
+
+        See https://openweathermap.org/history
+
+        Parameters
+        ----------
+        city_id : int
+            The city id recognized by OpenWeatherMap.org
+        start : start date (unix time, UTC time zone), e.g. start=1369728000
+        end : end date (unix time, UTC time zone), e.g. end=1369789200
+
+        Returns
+        -------
+        json string
+            json string containing the weather for a specific date
+
+        """
+
+        protocol = "https://"
+        base_url = "history.openweathermap.org"
+        url = f"/data/2.5/history/city?id={city_id}&start={start}&end={end}&appid={self.secret_api_key}"
+        url_to_call = f"{protocol}{base_url}{url}"
+
+        res = AltF1BeHelpers.requests_retry_session().get(url_to_call)
+
+        logging.info(
+            f"http status: {res.status_code} for {AltF1BeHelpers.hide_secrets_from_url(url)}"
+        )
+
+        data = res.content
         result = data.decode("utf-8")
         # print(result)
         return result
@@ -203,10 +287,10 @@ class OpenWeatherMap():
                 weather_json = json.load(json_file)
             return weather_json
 
-        logging.info(f"Weather file stored in : {os.path.dirname(filename)}")
+        # logging.info(f"Weather file stored in : {os.path.dirname(filename)}")
 
         # get the weather from OpenWeatherMap.org
-        weather_json = self.get_history(
+        weather_json = self.get_historical_weather(
             city_id, int(start_datetime.timestamp()), int(end_datetime.timestamp()))
 
         df_csv = pd.DataFrame()
@@ -306,8 +390,8 @@ class OpenWeatherMap():
         """
         j = json.loads(json_str)
         df_csv = self.weather_csv_to_df(j)
-        
-        df_csv['dt_str'] = pd.to_datetime(df_csv['dt'],unit='s')
+
+        df_csv['dt_str'] = pd.to_datetime(df_csv['dt'], unit='s')
         return df_csv
 
     def uv_index_json_str_to_flat_df(self, json_str):
@@ -344,8 +428,9 @@ class OpenWeatherMap():
         )
         printable_end_datetime = end_datetime.strftime("%Y-%m-%d_%Hh%M")
 
-        logging.info(
-            f"get_range_between_days: {printable_start_datetime}, {printable_end_datetime}")
+        # logging.info(
+        #     f"get_range_between_days: {printable_start_datetime}, {printable_end_datetime}"
+        # )
 
         return start_datetime, end_datetime
 
@@ -371,7 +456,8 @@ class OpenWeatherMap():
         printable_end_datetime = end_datetime.strftime("%Y-%m-%d_%Hh%M")
 
         logging.info(
-            f"get_range_in_a_month: {printable_start_datetime}, {printable_end_datetime}")
+            f"get_range_in_a_month: {printable_start_datetime}, {printable_end_datetime}"
+        )
 
         return start_datetime, end_datetime
 
