@@ -25,10 +25,42 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
 
 # constants
 MISSING_LIBRARY = -1
+import logging
+
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 # import libraries
+import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 class AltF1BeHelpers:
+
+    @staticmethod
+    def requests_retry_session(
+        retries=3,
+        backoff_factor=0.3,
+        status_forcelist=(500, 502, 504),
+        session=None,
+    ):
+        session = session or requests.Session()
+        retry = Retry(
+            total=retries,
+            read=retries,
+            connect=retries,
+            backoff_factor=backoff_factor,
+            status_forcelist=status_forcelist,
+        )
+        adapter = HTTPAdapter(max_retries=retry)
+        session.mount('http://', adapter)
+        session.mount('https://', adapter)
+        return session
+        
+    @staticmethod
+    def hide_secrets_from_url(url):
+        text_to_hide = url[url.find('appid=')+6:url.find('&lat=')]
+        result = url.replace(text_to_hide, 'HIDDEN_DATA')
+        return result
 
     @staticmethod
     def date_utc(s):
@@ -44,10 +76,11 @@ class AltF1BeHelpers:
         """
         #print(f'string: {string}')
         try:
-            mat=re.findall(r"([0-2][0-3]|[0-1][0-9])-([0-5][0-9])-([0-5][0-9])", string) # HH:MM:SS
+            mat = re.findall(
+                r"([0-2][0-3]|[0-1][0-9])-([0-5][0-9])-([0-5][0-9])", string)  # HH:MM:SS
             if mat is not None:
-                    # print(f'mat: {"-".join(mat[1])}')
-                    return ':'.join(mat[1])
+                # print(f'mat: {"-".join(mat[1])}')
+                return ':'.join(mat[1])
             else:
                 print('else')
                 return None
@@ -63,7 +96,8 @@ class AltF1BeHelpers:
         """
         #print(f'string: {string}')
         try:
-            mat=re.match(r'(?:(?:19|20)\d\d)-(?:11|12|10|0?[1-9])-(?:11|12|10|0?[1-9])', string) # YYY-MM-DD
+            mat = re.match(
+                r'(?:(?:19|20)\d\d)-(?:11|12|10|0?[1-9])-(?:11|12|10|0?[1-9])', string)  # YYY-MM-DD
             if mat is not None:
                 #print(f'mat: {mat.group()}')
                 return mat.group()
@@ -73,35 +107,35 @@ class AltF1BeHelpers:
 
     @staticmethod
     def count_files_in_dir(directory):
-        
-        def unique(list1): 
-        
-            # insert the list to the set 
-            list_set = set(list1) 
-            # convert the set to the list 
-            unique_list = (list(list_set)) 
-            for x in unique_list: 
-                pass #print(x)
+
+        def unique(list1):
+
+            # insert the list to the set
+            list_set = set(list1)
+            # convert the set to the list
+            unique_list = (list(list_set))
+            for x in unique_list:
+                pass  # print(x)
             return unique_list
-        
+
         filenames = glob.glob(
-            directory, 
+            directory,
             recursive=True
         )
         files_count = len(filenames)
-        
+
         filenames_list = list()
         filenames_set = set()
         for filename in filenames:
             filenames_list.append(os.path.basename(filename))
             filenames_set.add(os.path.basename(filename))
             # print(f"os.path.basename(filename): {os.path.basename(filename)}")
-        
+
         print(f"len(filenames_list): {len(filenames_list)}")
         print(f"len(filenames_set): {len(filenames_set)}")
-        print(f"directory: {directory}")    
+        print(f"directory: {directory}")
         print(f"files_count: {files_count}")
-        
+
     @staticmethod
     def is_interactive():
         # return True if running on Kaggle
@@ -163,10 +197,13 @@ if __name__ == "__main__":
 
     text = "éè à iïî où &é'(§è!çàaQwxs $ µ `"
     print(
-        f"unicode_to_ascii(text): '{text}' becomes '{AltF1BeHelpers.unicode_to_ascii(text)}'")
+        f"unicode_to_ascii(text): '{text}' becomes '{AltF1BeHelpers.unicode_to_ascii(text)}'"
+    )
     print(f"is_interactive(): {AltF1BeHelpers.is_interactive()}")
     # print(f"output_directory(): {AltF1BeHelpers.output_directory(['delete_the_test_directory'])}")
 
     for single_date in AltF1BeHelpers.daterange(datetime.now() - timedelta(5), datetime.now() - timedelta(1)):
-            #print(single_date.strftime("%Y-%m-%d"))
-            print(f'daterange(): {single_date.strftime("%Y-%m-%d")}')
+            # print(single_date.strftime("%Y-%m-%d"))
+        print(f'daterange(): {single_date.strftime("%Y-%m-%d")}')
+
+    print(f'{AltF1BeHelpers.hide_secrets_from_url(url="/data/2.5/uvi/history?appid=secret_api_key&lat=lat&lon=lon&cnt=cnt&start=start_date&end=end_date")}')
