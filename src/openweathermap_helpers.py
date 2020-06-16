@@ -6,9 +6,10 @@
 # initialize libraries
 import logging
 import http.client
-import datetime
+from datetime import datetime, timedelta, date
 import json
 from altf1be_helpers import AltF1BeHelpers
+from pytz import timezone
 from os import path
 import numpy as np  # linear algebra
 import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
@@ -84,23 +85,30 @@ class OpenWeatherMap():
         """
             get the UV Index for a specific day from OpenWeatherMap.org
         """
-        
+
         city_name = current_row['city.findname']
         city_id = current_row['id']
 
-        start_datetime = datetime.datetime(
+        # start_datetime = datetime.datetime(
+        #     year=year, month=month, day=day, hour=0, minute=0
+        # )
+        start_datetime = datetime(
             year=year, month=month, day=day, hour=0, minute=0
+        ).replace(
+            tzinfo=timezone('UTC')
         )
+
         end_datetime = start_datetime
 
-        print(f'save_uv_index_to_file : save file: {start_datetime.strftime("%Y-%m-%d")}')
+        print(
+            f'save_uv_index_to_file : save file: {start_datetime.strftime("%Y-%m-%d")}')
 
         filename = os.path.join(
             self.altF1BeHelpers.output_directory(
                 [
                     'OpenWeatherMap.org',
+                    'uv-index',
                     start_datetime.strftime("%Y-%m-%d"),
-                    'uv-index'
                 ]
             ),
             f'{city_name}-{start_datetime.strftime("%Y-%m-%d")}-uv_index'
@@ -121,8 +129,8 @@ class OpenWeatherMap():
             lat=current_row['city.coord.lat'],
             lon=current_row['city.coord.lon'],
             cnt=1,
-            start_date=start_datetime.strftime('%s'),
-            end_date=end_datetime.strftime('%s')
+            start_date=int(start_datetime.timestamp()),
+            end_date=int(end_datetime.timestamp())
         )
 
         df_csv = pd.DataFrame()
@@ -180,7 +188,10 @@ class OpenWeatherMap():
 
         filename = os.path.join(
             self.altF1BeHelpers.output_directory(
-                ['OpenWeatherMap.org', start_datetime.strftime("%Y-%m-%d")]
+                [
+                    'OpenWeatherMap.org',
+                    start_datetime.strftime("%Y-%m-%d")
+                ]
             ),
             f'{city_name}-{start_datetime.strftime("%Y-%m-%d")}-weather'
         )
@@ -196,7 +207,7 @@ class OpenWeatherMap():
 
         # get the weather from OpenWeatherMap.org
         weather_json = self.get_history(
-            city_id, start_datetime.strftime('%s'), end_datetime.strftime('%s'))
+            city_id, int(start_datetime.timestamp()), int(end_datetime.timestamp()))
 
         df_csv = pd.DataFrame()
         if format == 'csv':
@@ -295,6 +306,8 @@ class OpenWeatherMap():
         """
         j = json.loads(json_str)
         df_csv = self.weather_csv_to_df(j)
+        
+        df_csv['dt_str'] = pd.to_datetime(df_csv['dt'],unit='s')
         return df_csv
 
     def uv_index_json_str_to_flat_df(self, json_str):
@@ -302,7 +315,8 @@ class OpenWeatherMap():
 
         """
 
-        df_csv = df = pd.read_json(json_str, convert_dates=False)
+        # ACTION: to remove if the assignation to df makes no difference : df_csv = df = pd.read_json(json_str, convert_dates=False)
+        df_csv = pd.read_json(json_str, convert_dates=False)
         return df_csv
 
     def get_range_between_days(self, year, month, day):
@@ -316,12 +330,18 @@ class OpenWeatherMap():
 
         """
 
-        start_datetime = datetime.datetime(
-            year=year, month=month, day=day, hour=0, minute=0)
+        start_datetime = datetime(
+            year=year, month=month, day=day, hour=0, minute=0
+        ).replace(
+            tzinfo=timezone('UTC')
+        )
         printable_start_datetime = start_datetime.strftime("%Y-%m-%d_%Hh%M")
 
-        end_datetime = datetime.datetime(
-            year=year, month=month, day=day, hour=23, minute=0)
+        end_datetime = datetime(
+            year=year, month=month, day=day, hour=23, minute=0
+        ).replace(
+            tzinfo=timezone('UTC')
+        )
         printable_end_datetime = end_datetime.strftime("%Y-%m-%d_%Hh%M")
 
         logging.info(
@@ -334,14 +354,20 @@ class OpenWeatherMap():
             get a range in a month 
         """
         start_datetime = datetime.datetime(
-            year=year, month=month, day=1+(current_week*days_in_a_week), hour=0, minute=0)
+            year=year, month=month, day=1+(current_week*days_in_a_week), hour=0, minute=0
+        ).replace(
+            tzinfo=timezone('UTC')
+        )
         printable_start_datetime = start_datetime.strftime("%Y-%m-%d_%Hh%M")
 
         end_day = days_in_current_month if 7 + \
             (current_week*days_in_a_week) > days_in_current_month else 7+(current_week*days_in_a_week)
 
         end_datetime = datetime.datetime(
-            year=year, month=month, day=end_day, hour=23, minute=0)
+            year=year, month=month, day=end_day, hour=23, minute=0
+        ).replace(
+            tzinfo=timezone('UTC')
+        )
         printable_end_datetime = end_datetime.strftime("%Y-%m-%d_%Hh%M")
 
         logging.info(
