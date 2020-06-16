@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.1.1...v3.0.0) (2020-06-16)
+
+
+### Features
+
+* add method date_utc to set the timezone to UTC ([db6fb98](https://github.com/ALT-F1/OpenWeatherMap/commit/db6fb983c94c51e17f5a3c37506cbe52a83285eb))
+* add stdout logs, remove unnecessary logging, fix name of the log file ([763c503](https://github.com/ALT-F1/OpenWeatherMap/commit/763c50367067d2e479e63add74f6e1bc404e9a09))
+* GET commands are performed in a Session including a retry mechanism; add hide_secrets_from_url to do not display sensitive data into the logs ([5ddb821](https://github.com/ALT-F1/OpenWeatherMap/commit/5ddb8214478550610854b17dc6020805b517d08c))
+* store the UV-Index from OpenWeatherMap.org, force the timezone to UCT ([2196b19](https://github.com/ALT-F1/OpenWeatherMap/commit/2196b1996e1c04cda077f89666f66fc206939a49))
+* use the Session/retry mechanism to improve the realibity of the download of data from OpenWeatherMap ([f77e1e1](https://github.com/ALT-F1/OpenWeatherMap/commit/f77e1e1093925c51bceb64f8d22b0f97bf01c983))
+
+
+### Bug Fixes
+
+* force the timezone to UTC ([2ab52cf](https://github.com/ALT-F1/OpenWeatherMap/commit/2ab52cfb8a707c007f836cb780d916f083de2427))
+* set the timezone to UTC ([052ab04](https://github.com/ALT-F1/OpenWeatherMap/commit/052ab049ce8ccfc97e7a714d81a8587f3a18f277))
+
+
+### Chores
+
+* .gitignore the directory containing snippets of code ([586577f](https://github.com/ALT-F1/OpenWeatherMap/commit/586577f633ec11a1bf762c231eeb1b792f688a63))
+
+
+### Builds
+
+* add new libraries to requirements.txt ([8633e3f](https://github.com/ALT-F1/OpenWeatherMap/commit/8633e3f9b68f179464bcb1c62416a4090ff6b8e8))
+
+
+### Documentations
+
+* remove intermediate files ([a92c0c0](https://github.com/ALT-F1/OpenWeatherMap/commit/a92c0c05f1f846726ca7b02964a7b4615f6a0050))
+* update up to June 15, 2020 ([2786a25](https://github.com/ALT-F1/OpenWeatherMap/commit/2786a2596d40d7d76f0af5f103572f1004817cf3))
+
 ### [2.1.1](https://github.com/ALT-F1/OpenWeatherMap/compare/v2.1.0...v2.1.1) (2020-06-14)
 
 
