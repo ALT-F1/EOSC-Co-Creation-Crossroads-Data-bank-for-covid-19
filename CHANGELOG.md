@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.2](https://github.com/ALT-F1/OpenWeatherMap/compare/v3.0.1...v3.0.2) (2020-06-17)
+
+
+### Documentations
+
+* update with Weather and UV-Index for June 16, 2020 ([3d23ce4](https://github.com/ALT-F1/OpenWeatherMap/commit/3d23ce4577a3093b63604a21eca3fc35424f2b76))
+
+
+### Chores
+
+* ignore output_directory/data/{BPost.be}{by_date}{by_province_and_quartile}{OpenWeatherMap.org} and do not send 160.000+ files on github ([94948d1](https://github.com/ALT-F1/OpenWeatherMap/commit/94948d177259397d9d37c63c83ade7047eec0d2b))
+
 ### [3.0.1](https://github.com/ALT-F1/OpenWeatherMap/compare/v3.0.0...v3.0.1) (2020-06-16)
 
 
