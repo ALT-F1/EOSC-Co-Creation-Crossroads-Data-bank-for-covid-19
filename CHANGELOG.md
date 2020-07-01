@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/ALT-F1/OpenWeatherMap/compare/v3.1.9...v3.2.0) (2020-07-01)
+
+
+### Features
+
+* create a shell script that activates conda/pandas environment and create the dataset containing the temperature and the UV-Index of Belgian provinces ([c461812](https://github.com/ALT-F1/OpenWeatherMap/commit/c4618126d1d04e7be53b7446486263c534694fb7))
+
 ### [3.1.9](https://github.com/ALT-F1/OpenWeatherMap/compare/v3.1.8...v3.1.9) (2020-07-01)
 
 
