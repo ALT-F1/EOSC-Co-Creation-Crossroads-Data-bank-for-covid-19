@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/ALT-F1/OpenWeatherMap/compare/v3.2.22...v3.3.0) (2020-07-23)
+
+
+### Features
+
+* build .py to automatically generate the dataset and push the data on Github ([e479841](https://github.com/ALT-F1/OpenWeatherMap/commit/e4798419ec0b9564609bf362ce52d85be48987ef))
+
 ### [3.2.22](https://github.com/ALT-F1/OpenWeatherMap/compare/v3.2.21...v3.2.22) (2020-07-23)
 
 
