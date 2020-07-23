@@ -1,4 +1,5 @@
-#/bin/sh
+#!/bin/bash
+cd ~/dev/github/OpenWeatherMap/
 echo "start building the dataset: eosc-gees-weather_in_belgian_provinces_per_day.py"
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate pandas

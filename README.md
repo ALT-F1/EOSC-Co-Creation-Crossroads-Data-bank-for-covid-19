@@ -12,6 +12,10 @@ The weather data will be linked to other data to answer one question: "Does the 
 4. Look in the [output_directory/data](output_directory/data) directory to manipulate .csv and .json files
 5. Manipulate the aggregated version of the data on [output_directory/data/latest/by_province_and_quartile.csv](output_directory/data/latest/by_province_and_quartile.csv)
 
+# Use crontab to generate the data and commit the new dataset on github
+
+* run  `python ~/dev/github/OpenWeatherMap/build_belgian_weather_by_province.py`
+
 # What are the data available?
 
 * Look into the directory [export_directory/data/by_date/yyyy-mm-dd](export_directory/data/by_date/yyyy-mm-dd)/*.{json|csv}` containing OpenWeatherMap.org for Belgian cities
