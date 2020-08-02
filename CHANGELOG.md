@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.0](https://github.com/ALT-F1/OpenWeatherMap/compare/v3.3.7...v3.4.0) (2020-08-02)
+
+
+### Bug Fixes
+
+* force the 'r' mode when reading a file ([25139f0](https://github.com/ALT-F1/OpenWeatherMap/commit/25139f0e2ffc14a5aad58302aace453c744da201))
+* force the 'r' mode when reading a file ([91e5145](https://github.com/ALT-F1/OpenWeatherMap/commit/91e514546d47183be6a2e88b9e227ed5d29969a3))
+
 ### [3.3.7](https://github.com/ALT-F1/OpenWeatherMap/compare/v3.3.6...v3.3.7) (2020-08-01)
 
 
