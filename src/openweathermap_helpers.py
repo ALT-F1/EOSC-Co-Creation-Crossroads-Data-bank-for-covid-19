@@ -167,7 +167,7 @@ class OpenWeatherMap():
             logging.warning(
                 f"WARNING: UV-Index file already exists: We skip its retrieval from OpenWeathMap.org: {filename}.json"
             )
-            with open(f"{filename}.json") as json_file:
+            with open(f"{filename}.json", "r") as json_file:
                 uv_index = json.load(json_file)
             return uv_index
 
@@ -283,7 +283,7 @@ class OpenWeatherMap():
         if os.path.exists(f"{filename}.json"):
             logging.warning(
                 f"WARNING: Weather file already exists: We skip its retrieval from OpenWeathMap.org: {filename}.json")
-            with open(f"{filename}.json") as json_file:
+            with open(f"{filename}.json", "r") as json_file:
                 weather_json = json.load(json_file)
             return weather_json
 
@@ -578,7 +578,7 @@ class OpenWeatherMap():
             extract cities from list of cities recognized by OpenWeatherMap.org
         """
         # load the history city list
-        with open(self.history_city_list_path) as f:
+        with open(self.history_city_list_path, "r") as f:
             d = json.load(f)
 
         return pd.json_normalize(d)
