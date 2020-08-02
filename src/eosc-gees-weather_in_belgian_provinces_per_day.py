@@ -15,6 +15,7 @@ import logging
 import threading
 from datetime import datetime, timedelta, date
 from pytz import timezone
+import sys
 import json
 # from altf1be_helpers import output_directory, daterange
 from altf1be_helpers import AltF1BeHelpers
@@ -112,10 +113,10 @@ class BelgianCities():
             f'{city_postal_code.zfill(4)}-{city_name}-{start_datetime.strftime("%Y-%m-%d")}-uv_index'
         )
 
-        if os.path.exists(f"{filename}.json"):
+        if os.path.exists(f"{filename}.json") and (os.stat(f"{filename}.json").st_size > 0):
             logging.warning(
                 f"UV-Index file already exists: We skip its retrieval from OpenWeathMap.org: {filename}.json")
-            with open(f"{filename}.json") as json_file:
+            with open(f"{filename}.json", "r") as json_file:
                 weather_json = json.load(json_file)
             return weather_json
 
@@ -206,10 +207,10 @@ class BelgianCities():
             f'{city_postal_code.zfill(4)}-{city_name}-{start_datetime.strftime("%Y-%m-%d")}'
         )
 
-        if os.path.exists(f"{filename}.json"):
+        if os.path.exists(f"{filename}.json") and (os.stat(f"{filename}.json").st_size > 0):
             logging.warning(
                 f"Weather data file already exists: We skip its retrieval from OpenWeathMap.org: {filename}.json")
-            with open(f"{filename}.json") as json_file:
+            with open(filename + ".json", "r") as json_file:
                 weather_json = json.load(json_file)
             return weather_json
 
