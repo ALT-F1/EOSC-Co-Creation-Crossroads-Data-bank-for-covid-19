@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.4.10](https://github.com/ALT-F1/OpenWeatherMap/compare/v3.4.9...v3.4.10) (2020-08-11)
+
+
+### Features
+
+* send an email when latest data are uploaded on GitHub ([b43ac27](https://github.com/ALT-F1/OpenWeatherMap/commit/b43ac276006e07bbde961bd309000b2c516a47d1))
+* send email informing when the latest data are stored on github ([f3e50e6](https://github.com/ALT-F1/OpenWeatherMap/commit/f3e50e60d1b8a546bd6a9db06912036e9ebeae7e))
+
+
+### Bug Fixes
+
+* make the display the time spent to build the datasource more easy to read ([6d8a775](https://github.com/ALT-F1/OpenWeatherMap/commit/6d8a775df2932ffc78d23bc2a56529f82b853e70))
+
+
+### Chores
+
+* add eosc.env in .gitignore ([010ed38](https://github.com/ALT-F1/OpenWeatherMap/commit/010ed38ffc37865a77526c0637b76772e659ae97))
+
 ### [3.4.9](https://github.com/ALT-F1/OpenWeatherMap/compare/v3.4.8...v3.4.9) (2020-08-11)
 
 
