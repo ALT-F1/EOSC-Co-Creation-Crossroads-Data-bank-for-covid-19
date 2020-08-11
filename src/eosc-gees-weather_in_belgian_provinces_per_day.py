@@ -901,13 +901,8 @@ if __name__ == "__main__":
     test_merge_weather_uv_index(belgianCities)
 
     t1_stop = perf_counter()
-
+    elapsed_time_str = f"__main__: Elapsed time in seconds : {t1_stop} - {t1_start} =  {t1_stop-t1_start}"
     logging.info(
-        f"__main__: Elapsed time: {t1_stop}, {t1_start}"
+        elapsed_time_str
     )
-    logging.info(
-        f"__main__: Elapsed time during the whole program in seconds:  {t1_stop-t1_start}"
-    )
-    print(f"__main__: Elapsed time: {t1_stop}, {t1_start}")
-    print(
-        f"__main__: Elapsed time during the whole program in seconds:  {t1_stop-t1_start}")
+    print(elapsed_time_str)
