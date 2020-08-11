@@ -248,3 +248,4 @@ output_directory/data/by_date
 output_directory/data/by_province_and_quartile
 output_directory/data/OpenWeatherMap.org
 sendgrid.env
+eosc.env
