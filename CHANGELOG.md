@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.4.12](https://github.com/ALT-F1/OpenWeatherMap/compare/v3.4.11...v3.4.12) (2020-08-12)
+
+
+### Bug Fixes
+
+* move secrets environment variables under an untracked directory ([bfee67b](https://github.com/ALT-F1/OpenWeatherMap/commit/bfee67bdb7985bae32e1e3caec2d2239795d97b1))
+
 ### [3.4.11](https://github.com/ALT-F1/OpenWeatherMap/compare/v3.4.10...v3.4.11) (2020-08-12)
 
 
