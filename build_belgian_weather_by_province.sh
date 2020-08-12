@@ -5,8 +5,9 @@ echo "start building the dataset: eosc-gees-weather_in_belgian_provinces_per_day
 cd ~/dev/github/OpenWeatherMap/
 
 source ~/miniconda3/etc/profile.d/conda.sh
-source ~/dev/github/OpenWeatherMap/eosc.env
-source ~/dev/github/OpenWeatherMap/sendgrid.env
+source ~/dev/secrets/eosc/eosc.env
+source ~/dev/secrets/eosc/openweathermap.env
+source ~/dev/secrets/eosc/sendgrid.env
 
 conda activate pandas
 
