@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.4.20](https://github.com/ALT-F1/OpenWeatherMap/compare/v3.4.19...v3.4.20) (2020-08-20)
+
+
+### Documentations
+
+* update with Weather and UV-Index for August 19, 2020 ([1c10f1d](https://github.com/ALT-F1/OpenWeatherMap/commit/1c10f1d2dc3bbf897ab09778245bb191a902b2d6))
+
 ### [3.4.19](https://github.com/ALT-F1/OpenWeatherMap/compare/v3.4.18...v3.4.19) (2020-08-19)
 
 
